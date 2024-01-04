@@ -2,23 +2,23 @@ package com.codegym.spb_eyesclinic_project.service.bookingService;
 
 import com.codegym.spb_eyesclinic_project.domain.Booking;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
-import com.codegym.spb_eyesclinic_project.domain.EyeCategory;
+
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
 import com.codegym.spb_eyesclinic_project.repository.BookingRepository;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 import com.codegym.spb_eyesclinic_project.repository.EyeCategoryRepository;
-import com.codegym.spb_eyesclinic_project.repository.UserRepository;
-import com.codegym.spb_eyesclinic_project.utils.AppUtils;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+
 
 @Service
 @AllArgsConstructor
@@ -30,11 +30,16 @@ public class BookingService {
 
     private final CustomerRepository customerRepository;
 
+    public List<Booking> getAll() {
+        return bookingRepository.findAll();
+    }
     public Booking getByStatus(EStatus string) {
         return bookingRepository.findBookingByStatus(string);
     }
 
-
+    public Optional<Booking> getById( Long id) {
+        return bookingRepository.findById(id);
+    }
 
     public void create(BookingRequest request) {
         Booking booking = new Booking();
@@ -43,13 +48,16 @@ public class BookingService {
         booking.setEyeCategory(eyeCategory.get());
         booking.setCustomer(customer.get());
         booking.setStatus(EStatus.PENDING);
-        booking.setDateBooking(LocalDate.parse(request.getDateAppointment()));
-        booking.setTimeBooking(request.getTimeAppointment());
-        // Định dạng của chuỗi ngày giờ
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        // Chuyển đổi chuỗi thành LocalDateTime
-//        LocalDateTime dateAppointment = LocalDateTime.parse(request.getDateAppointment(), formatter);
-//        booking.setDateAppointment(dateAppointment);
+//        booking.setDateBooking(LocalDate.parse(request.getDateBooking()));
+        booking.setTimeBooking(request.getTimeBooking());
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse(request.getDateBooking());
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+            booking.setDateBooking(sqlDate.toLocalDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         bookingRepository.save(booking);
     }
 
@@ -72,16 +80,25 @@ public class BookingService {
        if(request.getStatus().toUpperCase().equals("COMPLETED")){
             result.setStatus(EStatus.COMPLETED);
        }
-        // Định dạng của chuỗi ngày giờ
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        // Chuyển đổi chuỗi thành LocalDateTime
-        LocalDate dateAppointment = LocalDate.parse(request.getDateAppointment(), formatter);
-        result.setDateBooking(dateAppointment);
+        if(request.getStatus().toUpperCase().equals("UNPAID")){
+            result.setStatus(EStatus.UNPAID);
+        }
 
+        if(request.getStatus().toUpperCase().equals("EXAMINING")){
+            result.setStatus(EStatus.EXAMINING);
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = dateFormat.parse(request.getDateBooking());
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+            result.setDateBooking(sqlDate.toLocalDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         result.setTimeBooking(result.getTimeBooking());
         bookingRepository.save(result);
     }
-
 
 
 
