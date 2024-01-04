@@ -1,5 +1,6 @@
 package com.codegym.spb_eyesclinic_project.controller.restController;
 
+import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.eyeCategoryDTO.EyeCategoryRequest;
 import com.codegym.spb_eyesclinic_project.service.bookingService.BookingService;
@@ -14,6 +15,13 @@ import org.springframework.web.bind.annotation.*;
 public class BookingRestController {
 
     private final BookingService bookingService;
+
+    @CrossOrigin
+    @GetMapping()
+    public ResponseEntity<?> getByStatus(){
+        EStatus string = EStatus.EXAMINING;
+        return new ResponseEntity<>(bookingService.getByStatus(string),HttpStatus.OK);
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody BookingRequest request, @PathVariable Long id) {

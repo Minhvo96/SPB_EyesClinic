@@ -29,6 +29,13 @@ public class BookingService {
     private final EyeCategoryRepository eyeCategoryRepository;
 
     private final CustomerRepository customerRepository;
+
+    public Booking getByStatus(EStatus string) {
+        return bookingRepository.findBookingByStatus(string);
+    }
+
+
+
     public void create(BookingRequest request) {
         Booking booking = new Booking();
         var eyeCategory = eyeCategoryRepository.findById(Long.valueOf(request.getIdEyeCategory()));
