@@ -16,12 +16,22 @@ public class BookingRestController {
 
     private final BookingService bookingService;
 
-    @CrossOrigin
-    @GetMapping()
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(bookingService.getAll(),HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id ) {
+        return new ResponseEntity<>(bookingService.getById(id),HttpStatus.OK);
+    }
+
+    @GetMapping("/examining")
     public ResponseEntity<?> getByStatus(){
         EStatus string = EStatus.EXAMINING;
         return new ResponseEntity<>(bookingService.getByStatus(string),HttpStatus.OK);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody BookingRequest request, @PathVariable Long id) {

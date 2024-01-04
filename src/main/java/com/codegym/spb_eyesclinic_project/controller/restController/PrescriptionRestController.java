@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/prescription")
 @AllArgsConstructor
+
 public class PrescriptionRestController {
     private final PrescriptionService prescriptionService;
 
-    @CrossOrigin
     @PostMapping
     public ResponseEntity<?> create(@RequestBody PrescriptionRequest request) {
         prescriptionService.create(request);
