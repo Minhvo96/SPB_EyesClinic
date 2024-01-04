@@ -19,6 +19,8 @@ public class BookingRequest {
 
     private String dateAppointment;
 
+    private String timeAppointment;
+
     private String status;
 
 }
