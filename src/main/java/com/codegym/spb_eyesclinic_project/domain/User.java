@@ -20,6 +20,8 @@ public class User {
 
     private String fullName;
 
+    private String address;
+
     private String phoneNumber;
 
     private String password;
