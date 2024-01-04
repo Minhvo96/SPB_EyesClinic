@@ -1,5 +1,4 @@
 package com.codegym.spb_eyesclinic_project.domain;
-
 import com.codegym.spb_eyesclinic_project.domain.Enum.EDegree;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EType;
 import lombok.AllArgsConstructor;

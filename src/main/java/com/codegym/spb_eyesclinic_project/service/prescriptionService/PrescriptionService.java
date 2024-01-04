@@ -29,7 +29,6 @@ public class PrescriptionService {
 
     public void create(PrescriptionRequest request) {
         var result = AppUtils.mapper.map(request, Prescription.class);
-        AppUtils.mapper.map(request, result);
         var doctor = staffRepository.findById(Long.valueOf(request.getIdDoctor()));
         var booking = bookingRepository.findById(Long.valueOf(request.getIdBooking()));
 
@@ -37,40 +36,46 @@ public class PrescriptionService {
         result.setBooking(booking.get());
         prescriptionRepository.save(result);
 
-        var medicines = medicineRepository.findAllById(request.getIdsMedicine()
-                .stream()
-                .map(medicine -> Long.valueOf(medicine.getId()))
-                .collect(Collectors.toList()));
+        var idsMedicine = request.getIdsMedicine().stream().map(item -> Long.valueOf(item.getId())).collect(Collectors.toList());
+
+        var medicines = medicineRepository.findAllById(idsMedicine);
 
         List<MedicinePrescription> medicinePrescriptions = new ArrayList<>();
+
         for (int i = 0; i < medicines.size(); i++) {
-            MedicinePrescription medicinePrescription = new MedicinePrescription(result, medicines.get(i));
+            MedicinePrescription medicinePrescription = new MedicinePrescription(
+                    result,
+                    medicines.get(i),
+                    Long.valueOf(request.getIdsMedicine().get(i).getQuantity()),
+                    medicines.get(i).getPriceMedicine(),
+                    request.getIdsMedicine().get(i).getUsingMedicine());
+
             medicinePrescriptions.add(medicinePrescription);
         }
         medicinePrescriptionRepository.saveAll(medicinePrescriptions);
     }
 
     public void update(PrescriptionRequest request, Long id){
-        var result = prescriptionRepository.findById(id).get();
-        AppUtils.mapper.map(request,result);
-        prescriptionRepository.save(result);
-
-        medicinePrescriptionRepository.deleteAllById(result.getMedicinePrescriptions()
-                .stream()
-                .map(item -> item.getId())
-                .collect(Collectors.toList()));
-
-        var medicines = medicineRepository.findAllById(request.getIdsMedicine()
-                .stream()
-                .map(medicine -> Long.valueOf(medicine.getId()))
-                .collect(Collectors.toList()));
-
-        List<MedicinePrescription> medicinePrescriptions = new ArrayList<>();
-        for (int i = 0; i < medicines.size(); i++) {
-            MedicinePrescription medicinePrescription = new MedicinePrescription(result, medicines.get(i));
-            medicinePrescriptions.add(medicinePrescription);
-        }
-        medicinePrescriptionRepository.saveAll(medicinePrescriptions);
+//        var result = prescriptionRepository.findById(id).get();
+//        AppUtils.mapper.map(request,result);
+//        prescriptionRepository.save(result);
+//
+//        medicinePrescriptionRepository.deleteAllById(result.getMedicinePrescriptions()
+//                .stream()
+//                .map(item -> item.getId())
+//                .collect(Collectors.toList()));
+//
+//        var medicines = medicineRepository.findAllById(request.getIdsMedicine()
+//                .stream()
+//                .map(medicine -> Long.valueOf(medicine.getId()))
+//                .collect(Collectors.toList()));
+//
+//        List<MedicinePrescription> medicinePrescriptions = new ArrayList<>();
+//        for (int i = 0; i < medicines.size(); i++) {
+//            MedicinePrescription medicinePrescription = new MedicinePrescription(result, medicines.get(i));
+//            medicinePrescriptions.add(medicinePrescription);
+//        }
+//        medicinePrescriptionRepository.saveAll(medicinePrescriptions);
     }
 }
 

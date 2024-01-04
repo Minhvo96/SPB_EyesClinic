@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class PrescriptionRestController {
     private final PrescriptionService prescriptionService;
 
+    @CrossOrigin
     @PostMapping
     public ResponseEntity<?> create(@RequestBody PrescriptionRequest request) {
         prescriptionService.create(request);

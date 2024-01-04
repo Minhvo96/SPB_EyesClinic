@@ -1,5 +1,4 @@
 package com.codegym.spb_eyesclinic_project.domain;
-
 import com.codegym.spb_eyesclinic_project.domain.Enum.EType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,14 +29,18 @@ public class MedicinePrescription {
 
     private BigDecimal price;
 
+    private String usingMedicine;
+
     @Enumerated(EnumType.STRING)
     private EType type;
 
-    public MedicinePrescription(Prescription prescription, Medicine medicine) {
+    public MedicinePrescription(Prescription prescription, Medicine medicine, Long quantity, BigDecimal price, String usingMedicine) {
         this.prescription = prescription;
         this.medicine = medicine;
+        this.quantity = quantity;
+        this.price = price;
+        this.usingMedicine = usingMedicine;
 
     }
-
 
 }

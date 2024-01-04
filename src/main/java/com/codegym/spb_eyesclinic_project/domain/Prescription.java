@@ -1,5 +1,4 @@
 package com.codegym.spb_eyesclinic_project.domain;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

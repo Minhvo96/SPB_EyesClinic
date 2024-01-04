@@ -11,4 +11,8 @@ import lombok.Setter;
 @Setter
 public class OptionRequest {
     private String id;
+
+    private String quantity;
+
+    private String usingMedicine;
 }
