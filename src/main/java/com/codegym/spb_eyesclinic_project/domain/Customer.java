@@ -20,10 +20,6 @@ public class Customer {
 
     private String age;
 
-    private String phoneNumber;
-
-    private String address;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
