@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+
 @Entity
 @Table(name = "bookings")
 @Getter
@@ -24,7 +25,7 @@ public class Booking {
     @OneToOne
     private EyeCategory eyeCategory;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+
     private LocalDate dateBooking;
 
     private String timeBooking;
