@@ -17,7 +17,9 @@ public class BookingRequest {
 
     private String idCustomer;
 
-    private String dateAppointment;
+    private String dateBooking;
+
+    private String timeBooking;
 
     private String status;
 

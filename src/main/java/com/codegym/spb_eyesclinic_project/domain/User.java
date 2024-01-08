@@ -20,15 +20,17 @@ public class User {
 
     private String fullName;
 
+    private String address;
+
     private String phoneNumber;
 
     private String password;
 
-    @OneToOne(mappedBy = "user")
-    private Staff staff;
+//    @OneToOne(mappedBy = "user")
+//    private Staff staff;
 
-    @OneToOne(mappedBy = "user")
-    private Customer customer;
+//    @OneToOne(mappedBy = "user")
+//    private Customer customer;
 
     @Enumerated(EnumType.STRING)
     private ERole role;
