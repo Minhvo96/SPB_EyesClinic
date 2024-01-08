@@ -1,6 +1,7 @@
 package com.codegym.spb_eyesclinic_project.domain;
 
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Booking {
     @OneToOne
     private EyeCategory eyeCategory;
 
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateBooking;
 
     private String timeBooking;
