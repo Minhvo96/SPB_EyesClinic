@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,12 +43,11 @@ public class BookingService {
         booking.setEyeCategory(eyeCategory.get());
         booking.setCustomer(customer.get());
         booking.setStatus(EStatus.PENDING);
-        booking.setDateBooking(LocalDateTime.now());
+        booking.setDateBooking(LocalDate.now());
         // Định dạng của chuỗi ngày giờ
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         // Chuyển đổi chuỗi thành LocalDateTime
         LocalDateTime dateAppointment = LocalDateTime.parse(request.getDateAppointment(), formatter);
-        booking.setDateAppointment(dateAppointment);
         bookingRepository.save(booking);
     }
 
@@ -74,7 +74,6 @@ public class BookingService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         // Chuyển đổi chuỗi thành LocalDateTime
         LocalDateTime dateAppointment = LocalDateTime.parse(request.getDateAppointment(), formatter);
-        result.setDateAppointment(dateAppointment);
         bookingRepository.save(result);
     }
 }

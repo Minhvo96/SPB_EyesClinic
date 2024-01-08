@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,9 +24,11 @@ public class Booking {
     @OneToOne
     private EyeCategory eyeCategory;
 
-    private LocalDateTime dateBooking;
+    private LocalDate dateBooking;
 
-    private LocalDateTime dateAppointment;
+    private String timeBooking;
+
+//    private LocalDateTime dateAppointment;
 
     @ManyToOne
     private Customer customer;
