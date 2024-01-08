@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/api/booking")
 @AllArgsConstructor
@@ -32,11 +34,17 @@ public class BookingRestController {
         return new ResponseEntity<>(bookingService.getByStatus(string),HttpStatus.OK);
     }
 
+    @PostMapping("/pending")
+    public ResponseEntity<?> getByStatusPending(@RequestBody BookingRequest request){
+        EStatus string = EStatus.PENDING;
+        String date = request.getDateBooking();
+        return new ResponseEntity<>(bookingService.getByStatusPending(string, date),HttpStatus.OK);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody BookingRequest request, @PathVariable Long id) {
-        bookingService.update(request, id);
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>(bookingService.update(request, id),HttpStatus.OK);
     }
     @PostMapping
     public ResponseEntity<?> create(@RequestBody BookingRequest request){

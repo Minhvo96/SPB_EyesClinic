@@ -22,6 +22,8 @@ public class Bill {
 
     private LocalDateTime dateDisease;
 
+    private BigDecimal totalPrice;
+
     @OneToOne
     private Prescription prescription;
 

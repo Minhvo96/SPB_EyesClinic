@@ -15,6 +15,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -37,9 +39,15 @@ public class BookingService {
         return bookingRepository.findBookingByStatus(string);
     }
 
+    public List<Booking> getByStatusPending(EStatus string, String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateBooking = LocalDate.parse(date, formatter);
+        return bookingRepository.findBookingListByStatus(string, dateBooking);
+    }
     public Optional<Booking> getById( Long id) {
         return bookingRepository.findById(id);
     }
+
 
     public void create(BookingRequest request) {
         Booking booking = new Booking();
@@ -61,7 +69,7 @@ public class BookingService {
         bookingRepository.save(booking);
     }
 
-    public void update(BookingRequest request, Long id) {
+    public Booking update(BookingRequest request, Long id) {
        var result = bookingRepository.findById(id).get();
        var eyeCategory = eyeCategoryRepository.findById(Long.valueOf(request.getIdEyeCategory()));
        var customer = customerRepository.findById(Long.valueOf(request.getIdCustomer()));
@@ -88,6 +96,12 @@ public class BookingService {
             result.setStatus(EStatus.EXAMINING);
         }
 
+        if(request.getStatus().toUpperCase().equals("PENDING")){
+            result.setStatus(EStatus.PENDING);
+        }
+
+
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = dateFormat.parse(request.getDateBooking());
@@ -96,8 +110,12 @@ public class BookingService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        result.setTimeBooking(result.getTimeBooking());
+
+        result.setTimeBooking(request.getTimeBooking());
+
         bookingRepository.save(result);
+
+        return result;
     }
 
 
