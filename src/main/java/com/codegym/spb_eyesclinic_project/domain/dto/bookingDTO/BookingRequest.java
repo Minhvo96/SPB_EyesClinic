@@ -21,6 +21,8 @@ public class BookingRequest {
 
     private String timeBooking;
 
+    private String createAtDay;
+
     private String status;
 
 }

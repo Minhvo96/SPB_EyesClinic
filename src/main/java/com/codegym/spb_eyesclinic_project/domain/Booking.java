@@ -24,10 +24,11 @@ public class Booking {
     @OneToOne
     private EyeCategory eyeCategory;
 
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateBooking;
 
     private String timeBooking;
+
+    private LocalDate createAtDay;
 
     @ManyToOne
     private Customer customer;

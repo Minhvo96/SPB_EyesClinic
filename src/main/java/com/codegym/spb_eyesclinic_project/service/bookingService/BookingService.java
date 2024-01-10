@@ -58,6 +58,10 @@ public class BookingService {
         booking.setStatus(EStatus.PENDING);
 //        booking.setDateBooking(LocalDate.parse(request.getDateBooking()));
         booking.setTimeBooking(request.getTimeBooking());
+
+        LocalDate currentDate = LocalDate.now();
+        booking.setCreateAtDay(currentDate);
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = dateFormat.parse(request.getDateBooking());

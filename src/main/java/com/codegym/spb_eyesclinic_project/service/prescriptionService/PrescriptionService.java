@@ -77,5 +77,9 @@ public class PrescriptionService {
 //        }
 //        medicinePrescriptionRepository.saveAll(medicinePrescriptions);
     }
+
+    public Prescription getPrescriptionByBookingId (Long id) {
+        return prescriptionRepository.getPrescriptionByIdBooking(id);
+    }
 }
 
