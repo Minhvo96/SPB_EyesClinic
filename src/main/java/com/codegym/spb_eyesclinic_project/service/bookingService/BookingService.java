@@ -1,21 +1,16 @@
 package com.codegym.spb_eyesclinic_project.service.bookingService;
-
 import com.codegym.spb_eyesclinic_project.domain.Booking;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
-
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
 import com.codegym.spb_eyesclinic_project.repository.BookingRepository;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 import com.codegym.spb_eyesclinic_project.repository.EyeCategoryRepository;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDate;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -56,6 +51,7 @@ public class BookingService {
         booking.setEyeCategory(eyeCategory.get());
         booking.setCustomer(customer.get());
         booking.setStatus(EStatus.PENDING);
+
 //        booking.setDateBooking(LocalDate.parse(request.getDateBooking()));
         booking.setTimeBooking(request.getTimeBooking());
 
@@ -92,6 +88,7 @@ public class BookingService {
        if(request.getStatus().toUpperCase().equals("COMPLETED")){
             result.setStatus(EStatus.COMPLETED);
        }
+
         if(request.getStatus().toUpperCase().equals("UNPAID")){
             result.setStatus(EStatus.UNPAID);
         }
@@ -105,7 +102,6 @@ public class BookingService {
         }
 
 
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = dateFormat.parse(request.getDateBooking());
@@ -116,7 +112,6 @@ public class BookingService {
         }
 
         result.setTimeBooking(request.getTimeBooking());
-
         bookingRepository.save(result);
 
         return result;

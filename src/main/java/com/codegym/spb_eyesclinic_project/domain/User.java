@@ -34,4 +34,15 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private ERole role;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":\"" + id + '\"' +
+                ", \"fullName\":\"" + fullName + '\"' +
+                ", \"phoneNumber\":\"" + phoneNumber + '\"' +
+                ", \"roles\":\"" + role + '\"' +
+                '}';
+    }
+
 }
