@@ -2,26 +2,22 @@ package com.codegym.spb_eyesclinic_project.service.user;
 
 
 import com.codegym.spb_eyesclinic_project.domain.Customer;
-import com.codegym.spb_eyesclinic_project.domain.Enum.ERole;
-import com.codegym.spb_eyesclinic_project.domain.Staff;
 import com.codegym.spb_eyesclinic_project.domain.User;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 import com.codegym.spb_eyesclinic_project.repository.StaffRepository;
 import com.codegym.spb_eyesclinic_project.repository.UserRepository;
-import com.codegym.spb_eyesclinic_project.service.customer.request.CustomerSaveRequest;
 import com.codegym.spb_eyesclinic_project.service.user.request.UserSaveRequest;
 import com.codegym.spb_eyesclinic_project.service.user.response.UserListResponse;
 import com.codegym.spb_eyesclinic_project.utils.AppUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserServices {
 
 
     private final UserRepository userRepository;
