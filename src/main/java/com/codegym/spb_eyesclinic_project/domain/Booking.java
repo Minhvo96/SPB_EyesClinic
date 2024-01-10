@@ -25,10 +25,11 @@ public class Booking {
     @OneToOne
     private EyeCategory eyeCategory;
 
-
     private LocalDate dateBooking;
 
     private String timeBooking;
+
+    private LocalDate createAtDay;
 
     @ManyToOne
     private Customer customer;

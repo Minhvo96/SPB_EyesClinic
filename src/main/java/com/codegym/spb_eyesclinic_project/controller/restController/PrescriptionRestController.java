@@ -27,4 +27,10 @@ public class PrescriptionRestController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/booking/{id}")
+    public ResponseEntity<?> getPrescriptionByBookingId(@PathVariable Long id) {
+
+        return new ResponseEntity<>(prescriptionService.getPrescriptionByBookingId(id),HttpStatus.OK);
+    }
+
 }
