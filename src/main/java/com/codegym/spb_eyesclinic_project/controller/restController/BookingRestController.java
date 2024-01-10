@@ -34,6 +34,13 @@ public class BookingRestController {
         return new ResponseEntity<>(bookingService.getByStatus(string),HttpStatus.OK);
     }
 
+    @PostMapping("/waiting")
+    public ResponseEntity<?> getByStatusWaiting(@RequestBody BookingRequest request){
+        EStatus string = EStatus.WAITING;
+        String date = request.getDateBooking();
+        return new ResponseEntity<>(bookingService.getByStatusWaiting(string, date),HttpStatus.OK);
+    }
+
     @PostMapping("/pending")
     public ResponseEntity<?> getByStatusPending(@RequestBody BookingRequest request){
         EStatus string = EStatus.PENDING;

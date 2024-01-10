@@ -27,4 +27,9 @@ public class Customer {
     public Customer(Long id) {
         this.id = id;
     }
+
+    public Customer(String age, User user) {
+        this.age = age;
+        this.user = user;
+    }
 }
