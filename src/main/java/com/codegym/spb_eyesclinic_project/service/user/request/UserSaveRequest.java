@@ -15,5 +15,9 @@ public class UserSaveRequest {
 
     private String role;
 
+    private String address;
+
     private String password;
+
+    private String age;
 }
