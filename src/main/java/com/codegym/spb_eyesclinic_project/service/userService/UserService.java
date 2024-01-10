@@ -1,10 +1,9 @@
-package com.example.furnitureweb.service.userService;
+package com.codegym.spb_eyesclinic_project.service.userService;
 
-import com.example.furnitureweb.model.User;
-import com.example.furnitureweb.model.UserPrinciple;
-import com.example.furnitureweb.model.dto.authDTO.RegisterRequest;
-import com.example.furnitureweb.repository.UserRepository;
 
+import com.codegym.spb_eyesclinic_project.domain.User;
+import com.codegym.spb_eyesclinic_project.domain.UserPrinciple;
+import com.codegym.spb_eyesclinic_project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,8 +40,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<User> findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 
     @Override
@@ -62,33 +61,33 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
+    public Boolean existsByPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(phoneNumber);
         }
         return UserPrinciple.build(userOptional.get());
     }
 
-    public boolean checkUsernameOrPhoneNumberOrEmail(RegisterRequest request, BindingResult result){
-        boolean check = false;
-        if(userRepository.existsByUsernameIgnoreCase(request.getUsername())){
-            result.rejectValue("username", "username", "Tên người dùng đã tồn tại!");
-            check = true;
-        }
-        if(userRepository.existsByEmailIgnoreCase(request.getEmail())){
-            result.rejectValue("email", "email", "Email đã tồn tại!");
-            check = true;
-        }
-        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())){
-            result.rejectValue("phoneNumber","phoneNumber","Số điện thoại đã tồn tại!");
-            check = true;
-        }
-        return check;
-    }
+//    public boolean checkUsernameOrPhoneNumberOrEmail(RegisterRequest request, BindingResult result){
+//        boolean check = false;
+//        if(userRepository.existsByUsernameIgnoreCase(request.getUsername())){
+//            result.rejectValue("username", "username", "Tên người dùng đã tồn tại!");
+//            check = true;
+//        }
+//        if(userRepository.existsByEmailIgnoreCase(request.getEmail())){
+//            result.rejectValue("email", "email", "Email đã tồn tại!");
+//            check = true;
+//        }
+//        if(userRepository.existsByPhoneNumber(request.getPhoneNumber())){
+//            result.rejectValue("phoneNumber","phoneNumber","Số điện thoại đã tồn tại!");
+//            check = true;
+//        }
+//        return check;
+//    }
 }

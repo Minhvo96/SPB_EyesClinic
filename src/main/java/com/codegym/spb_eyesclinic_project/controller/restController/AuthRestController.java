@@ -1,20 +1,17 @@
-package com.example.furnitureweb.controller.restController;
+package com.codegym.spb_eyesclinic_project.controller.restController;
 
-import com.example.furnitureweb.exception.DataInputException;
-import com.example.furnitureweb.exception.UnauthorizedException;
-import com.example.furnitureweb.model.User;
-import com.example.furnitureweb.model.dto.authDTO.LoginRequest;
-import com.example.furnitureweb.model.dto.authDTO.RegisterRequest;
-import com.example.furnitureweb.model.dto.jwt.JwtResponse;
-import com.example.furnitureweb.model.dto.locationDTO.LocationRequest;
-import com.example.furnitureweb.service.auth.AuthService;
-import com.example.furnitureweb.service.jwt.JwtService;
-import com.example.furnitureweb.service.locationService.LocationService;
-import com.example.furnitureweb.service.userService.IUserService;
-import com.example.furnitureweb.utils.AppUtils;
+
+import com.codegym.spb_eyesclinic_project.domain.User;
+import com.codegym.spb_eyesclinic_project.domain.dto.authDTO.LoginRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.authDTO.RegisterRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.jwt.JwtResponse;
+import com.codegym.spb_eyesclinic_project.exception.DataInputException;
+import com.codegym.spb_eyesclinic_project.exception.UnauthorizedException;
+import com.codegym.spb_eyesclinic_project.service.auth.AuthService;
+import com.codegym.spb_eyesclinic_project.service.jwt.JwtService;
+import com.codegym.spb_eyesclinic_project.service.userService.IUserService;
+import com.codegym.spb_eyesclinic_project.utils.AppUtils;
 import lombok.AllArgsConstructor;
-import org.hibernate.engine.jdbc.mutation.spi.BindingGroup;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,8 +24,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Optional;
@@ -52,12 +53,11 @@ public class AuthRestController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request,
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request,
                                       BindingResult result, Model model) throws IOException {
 
-        authService.checkUsernameOrPhoneNumberOrEmail(request, result);
+        authService.checkPhoneNumber(request, result);
         model.addAttribute("user", request);
-        new RegisterRequest().validate(request, result);
 
         if (result.hasErrors()) {
             return AppUtils.mapErrorToResponse(result);
@@ -73,16 +73,15 @@ public class AuthRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request, BindingResult bindingResult) {
-        authService.checkUsernameAndPassword(request, bindingResult);
-        new LoginRequest().validate(request, bindingResult);
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, BindingResult bindingResult, HttpServletResponse response) {
+        authService.checkPhoneNumberAndPassword(request, bindingResult);
         if (bindingResult.hasErrors()) {
             return AppUtils.mapErrorToResponse(bindingResult);
         }
         Authentication authentication;
         try {
              authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+                    new UsernamePasswordAuthenticationToken(request.getPhoneNumber(), request.getPassword()));
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new UnauthorizedException("Username or password invalid");
@@ -91,12 +90,12 @@ public class AuthRestController {
 
             String jwt = jwtService.generateTokenLogin(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Optional<User> userOptional = userService.findByUsername(request.getUsername());
+            Optional<User> userOptional = userService.findByPhoneNumber(request.getPhoneNumber());
 
             JwtResponse jwtResponse = new JwtResponse(
                     jwt,
                     userOptional.get().getId(),
-                    userDetails.getUsername(),
+                    userOptional.get().getPhoneNumber(),
                     userOptional.get().getFullName(),
                     userDetails.getAuthorities()
             );
@@ -112,9 +111,9 @@ public class AuthRestController {
             System.out.println(jwtResponse);
 
             return ResponseEntity
-                    .ok()
-                    .header(HttpHeaders.SET_COOKIE, springCookie.toString())
-                    .body(jwtResponse);
+                        .ok()
+                        .header(HttpHeaders.SET_COOKIE, springCookie.toString())
+                        .body(jwt);
 
     }
 }

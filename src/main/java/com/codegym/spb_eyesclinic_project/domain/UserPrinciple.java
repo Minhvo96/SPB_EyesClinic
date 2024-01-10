@@ -1,6 +1,6 @@
-package com.example.furnitureweb.model;
+package com.codegym.spb_eyesclinic_project.domain;
 
-import com.example.furnitureweb.model.Enum.ERole;
+import com.codegym.spb_eyesclinic_project.domain.Enum.ERole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ public class UserPrinciple implements UserDetails {
 
     private final Long id;
 
-    private final String username;
+    private final String phoneNumber;
     private final String fullName;
     private final String password;
 
@@ -23,9 +23,9 @@ public class UserPrinciple implements UserDetails {
 
     private final String role;
 
-    public UserPrinciple(Long id, String username, String fullName, String password, Collection<? extends GrantedAuthority> roles, ERole role) {
+    public UserPrinciple(Long id, String phoneNumber, String fullName, String password, Collection<? extends GrantedAuthority> roles, ERole role) {
         this.id = id;
-        this.username = username;
+        this.phoneNumber = phoneNumber;
         this.fullName = fullName;
         this.password = password;
         this.roles = roles;
@@ -39,7 +39,7 @@ public class UserPrinciple implements UserDetails {
 
         return new UserPrinciple(
                 user.getId(),
-                user.getUsername(),
+                user.getPhoneNumber(),
                 user.getFullName(),
                 user.getPassword(),
                 authorities,
@@ -53,8 +53,10 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return null;
     }
+
+    public String getPhoneNumber() {return phoneNumber;}
 
     public String getFullName() {
         return fullName;

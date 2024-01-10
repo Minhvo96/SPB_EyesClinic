@@ -1,14 +1,15 @@
-package com.example.furnitureweb.service.userService;
+package com.codegym.spb_eyesclinic_project.service.userService;
 
-import com.example.furnitureweb.model.User;
-import com.example.furnitureweb.service.IGeneralService;
+
+import com.codegym.spb_eyesclinic_project.domain.User;
+import com.codegym.spb_eyesclinic_project.service.IGeneralService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Optional;
 
 public interface IUserService extends IGeneralService<User, String>, UserDetailsService {
-    Optional<User> findByUsername(String username);
+    Optional<User> findByPhoneNumber(String phoneNumber);
 
-    Boolean existsByUsername(String username);
+    Boolean existsByPhoneNumber(String username);
 
 }

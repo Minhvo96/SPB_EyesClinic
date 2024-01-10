@@ -1,4 +1,4 @@
-package com.example.furnitureweb.model.dto.jwt;
+package com.codegym.spb_eyesclinic_project.domain.dto.jwt;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +14,14 @@ public class JwtResponse {
     private Long id;
     private String token;
     private String type = "Bearer";
-    private String username;
+    private String phoneNumber;
     private String fullName;
     private Collection<? extends GrantedAuthority> roles;
 
-    public JwtResponse(String accessToken, Long id, String username, String fullName, Collection<? extends GrantedAuthority> roles) {
+    public JwtResponse(String accessToken, Long id, String phoneNumber, String fullName, Collection<? extends GrantedAuthority> roles) {
         this.token = accessToken;
         this.id = id;
-        this.username = username;
+        this.phoneNumber = phoneNumber;
         this.fullName = fullName;
         this.roles = roles;
     }
@@ -32,7 +32,7 @@ public class JwtResponse {
                 "id=" + id +
                 ", token='" + token + '\'' +
                 ", type='" + type + '\'' +
-                ", username='" + username + '\'' +
+                ", username='" + phoneNumber + '\'' +
                 ", name='" + fullName + '\'' +
                 ", roles=" + roles +
                 '}';

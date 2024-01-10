@@ -1,4 +1,4 @@
-package com.example.furnitureweb.service;
+package com.codegym.spb_eyesclinic_project.service;
 
 import java.util.List;
 import java.util.Optional;
