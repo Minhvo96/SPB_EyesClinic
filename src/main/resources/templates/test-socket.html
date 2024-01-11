@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- https://cdnjs.com/libraries/sockjs-client -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <!-- https://cdnjs.com/libraries/stomp.js/ -->
+    <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script src="/assets/socket/main.js"></script>
+
+</head>
+<body>
+        <h>Page test socket JS</h>
+        <div>
+            <button onclick="connectServer()">Connect</button>
+        </div>
+        <div>
+            <button onclick="handleFunction()">Thực hiện chức năng nào đó</button>
+        </div>
+        <div id="results">
+
+        </div>
+        <script>
+            function connectServer(){
+                var socket = new SockJS('/ws');
+                stompClient = Stomp.over(socket);
+
+                stompClient.connect({}, onConnected, onError);
+            }
+            function onConnected() {
+                // Subscribe to the Public Topic
+                stompClient.subscribe('/topic/publicChatRoom', onMessageReceived);
+            }
+            function onError(error) {
+                console.log("Error websocket: ", error)
+            }
+
+            function handleFunction(){
+                fetch("http://localhost:8080/api/test-api/send")
+                    .then((res)=> {
+                        console.log("ĐÃ KÊU SERVER LÀM GÌ ĐÓ")
+                    })
+
+            }
+
+            function onMessageReceived(payload) {
+                var message = JSON.parse(payload.body);
+                let e  = document.createElement("p");
+                e.innerHTML = `<p>Sender: ${message.sender} - message: ${message.content}</p>`;
+                document.getElementById("results").appendChild(e)
+            }
+        </script>
+</body>
+</html>
