@@ -3,10 +3,13 @@ package com.codegym.spb_eyesclinic_project.controller.restController;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.eyeCategoryDTO.EyeCategoryRequest;
+import com.codegym.spb_eyesclinic_project.domain.socket.ChatMessage;
 import com.codegym.spb_eyesclinic_project.service.bookingService.BookingService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -15,6 +18,9 @@ import java.util.Date;
 @RequestMapping("/api/booking")
 @AllArgsConstructor
 public class BookingRestController {
+
+    @Autowired
+    private SimpMessageSendingOperations messagingTemplate;
 
     private final BookingService bookingService;
 
@@ -56,6 +62,12 @@ public class BookingRestController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody BookingRequest request){
         bookingService.create(request);
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSender("Customer");
+        chatMessage.setContent("Vừa có khách đặt lịch khám!");
+        messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -1,5 +1,4 @@
 package com.codegym.spb_eyesclinic_project.config;
-
 import com.codegym.spb_eyesclinic_project.interceptor.HttpHandshakeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +20,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOrigins("http://localhost:5173")
                 .withSockJS().setInterceptors(handshakeInterceptor);
     }
-
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {

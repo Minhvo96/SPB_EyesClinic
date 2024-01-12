@@ -59,6 +59,7 @@ public class BookingService {
         var customer = customerRepository.findById(Long.valueOf(request.getIdCustomer()));
         booking.setEyeCategory(eyeCategory.get());
         booking.setCustomer(customer.get());
+
         if(request.getStatus().equals("PENDING")){
             booking.setStatus(EStatus.PENDING);
         }
@@ -69,7 +70,6 @@ public class BookingService {
 
         booking.setMessage(request.getMessage());
         booking.setCreateAtDay(LocalDateTime.now());
-
         booking.setTimeBooking(request.getTimeBooking());
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
