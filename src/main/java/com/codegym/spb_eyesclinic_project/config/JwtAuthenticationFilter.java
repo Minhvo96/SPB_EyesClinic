@@ -1,6 +1,4 @@
 package com.codegym.spb_eyesclinic_project.config;
-
-
 import com.codegym.spb_eyesclinic_project.service.jwt.JwtService;
 import com.codegym.spb_eyesclinic_project.service.userService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
