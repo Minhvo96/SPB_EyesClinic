@@ -25,6 +25,7 @@ public class PrescriptionRestController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody PrescriptionRequest request) {
         prescriptionService.create(request);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -33,13 +34,10 @@ public class PrescriptionRestController {
         prescriptionService.updatePrescription(request, id);
 
         ChatMessage chatMessage = new ChatMessage();
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        chatMessage.setSender("SERVER");
-        chatMessage.setContent("Server gửi về nè: " + Math.random());
-
+        chatMessage.setSender("DOCTOR");
+        chatMessage.setContent("Đã khám cho bệnh nhân xong, chờ thanh toán!");
         messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
+
         return ResponseEntity.ok().build();
     }
 
