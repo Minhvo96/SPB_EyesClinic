@@ -59,7 +59,14 @@ public class BookingService {
         var customer = customerRepository.findById(Long.valueOf(request.getIdCustomer()));
         booking.setEyeCategory(eyeCategory.get());
         booking.setCustomer(customer.get());
-        booking.setStatus(EStatus.PENDING);
+        if(request.getStatus().equals("PENDING")){
+            booking.setStatus(EStatus.PENDING);
+        }
+
+        if(request.getStatus().equals("WAITING")) {
+            booking.setStatus(EStatus.WAITING);
+        }
+
         booking.setMessage(request.getMessage());
         booking.setCreateAtDay(LocalDateTime.now());
 
