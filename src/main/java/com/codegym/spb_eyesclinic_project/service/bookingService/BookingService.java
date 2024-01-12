@@ -63,6 +63,7 @@ public class BookingService {
         if(request.getStatus().equals("PENDING")){
             booking.setStatus(EStatus.PENDING);
         }
+
         if(request.getStatus().equals("WAITING")) {
             booking.setStatus(EStatus.WAITING);
         }
