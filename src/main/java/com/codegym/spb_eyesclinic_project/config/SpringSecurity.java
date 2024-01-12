@@ -54,6 +54,9 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                         "/api/**"
                 ).permitAll()
                 .antMatchers(
+                        "/ws/**", "/test/**"
+                ).permitAll()
+                .antMatchers(
                         "/dashboard",
                         "/logout",
                         "/register/**",
