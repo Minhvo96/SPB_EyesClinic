@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,50 +33,58 @@ public class PrescriptionService {
         var doctor = staffRepository.findById(Long.valueOf(request.getIdDoctor()));
         var booking = bookingRepository.findById(Long.valueOf(request.getIdBooking()));
 
-        result.setDoctor(doctor.get());
-        result.setBooking(booking.get());
-        prescriptionRepository.save(result);
+        Optional<Prescription> existingPrescriptionOptional = Optional.ofNullable(prescriptionRepository.getPrescriptionByIdBooking(Long.valueOf(request.getIdBooking())));
 
-        var idsMedicine = request.getIdsMedicine().stream().map(item -> Long.valueOf(item.getId())).collect(Collectors.toList());
-
-        var medicines = medicineRepository.findAllById(idsMedicine);
-
-        List<MedicinePrescription> medicinePrescriptions = new ArrayList<>();
-
-        for (int i = 0; i < medicines.size(); i++) {
-            MedicinePrescription medicinePrescription = new MedicinePrescription(
-                    result,
-                    medicines.get(i),
-                    Long.valueOf(request.getIdsMedicine().get(i).getQuantity()),
-                    medicines.get(i).getPriceMedicine(),
-                    request.getIdsMedicine().get(i).getUsingMedicine());
-
-            medicinePrescriptions.add(medicinePrescription);
+        if (existingPrescriptionOptional.isPresent()) {
+            result.setEyeSight(request.getEyeSight());
+            result.setId(existingPrescriptionOptional.get().getId());
+            prescriptionRepository.save(result);
+        } else {
+            result.setDoctor(doctor.get());
+            result.setBooking(booking.get());
+            prescriptionRepository.save(result);
         }
-        medicinePrescriptionRepository.saveAll(medicinePrescriptions);
     }
 
-    public void update(PrescriptionRequest request, Long id){
-//        var result = prescriptionRepository.findById(id).get();
-//        AppUtils.mapper.map(request,result);
-//        prescriptionRepository.save(result);
-//
-//        medicinePrescriptionRepository.deleteAllById(result.getMedicinePrescriptions()
-//                .stream()
-//                .map(item -> item.getId())
-//                .collect(Collectors.toList()));
-//
-//        var medicines = medicineRepository.findAllById(request.getIdsMedicine()
-//                .stream()
-//                .map(medicine -> Long.valueOf(medicine.getId()))
-//                .collect(Collectors.toList()));
-//
-//        List<MedicinePrescription> medicinePrescriptions = new ArrayList<>();
-//        for (int i = 0; i < medicines.size(); i++) {
-//            MedicinePrescription medicinePrescription = new MedicinePrescription(result, medicines.get(i));
-//            medicinePrescriptions.add(medicinePrescription);
-//        }
-//        medicinePrescriptionRepository.saveAll(medicinePrescriptions);
+    public void updatePrescription(PrescriptionRequest request, Long id){
+        Optional<Prescription> existingPrescriptionOptional = Optional.ofNullable(prescriptionRepository.getPrescriptionByIdBooking(id));
+
+        if (existingPrescriptionOptional.isPresent()) {
+            Prescription existingPrescription = existingPrescriptionOptional.get();
+
+            AppUtils.mapper.map(request, existingPrescription);
+
+            var doctor = staffRepository.findById(Long.valueOf(request.getIdDoctor()));
+            existingPrescription.setDoctor(doctor.get());
+
+            var booking = bookingRepository.findById(id);
+            existingPrescription.setBooking(booking.get());
+            existingPrescription.setId(existingPrescription.getId());
+
+            prescriptionRepository.save(existingPrescription);
+
+
+            var idsMedicine = request.getIdsMedicine().stream().map(item -> Long.valueOf(item.getId())).collect(Collectors.toList());
+            var medicines = medicineRepository.findAllById(idsMedicine);
+
+            List<MedicinePrescription> medicinePrescriptions = new ArrayList<>();
+
+            for (int i = 0; i < medicines.size(); i++) {
+                MedicinePrescription medicinePrescription = new MedicinePrescription(
+                        existingPrescription,
+                        medicines.get(i),
+                        Long.valueOf(request.getIdsMedicine().get(i).getQuantity()),
+                        medicines.get(i).getPriceMedicine(),
+                        request.getIdsMedicine().get(i).getUsingMedicine());
+
+                medicinePrescriptions.add(medicinePrescription);
+            }
+            medicinePrescriptionRepository.saveAll(medicinePrescriptions);
+        }
+    }
+
+    public Prescription getPrescriptionByBookingId (Long id) {
+        return prescriptionRepository.getPrescriptionByIdBooking(id);
     }
 }
 

@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +37,12 @@ public class BookingService {
         return bookingRepository.findBookingByStatus(string);
     }
 
+    public List<Booking> getByStatusWaiting(EStatus string, String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateBooking = LocalDate.parse(date, formatter);
+        return bookingRepository.findBookingListByStatus(string, dateBooking);
+    }
+
     public List<Booking> getByStatusPending(EStatus string, String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateBooking = LocalDate.parse(date, formatter);
@@ -50,10 +59,19 @@ public class BookingService {
         var customer = customerRepository.findById(Long.valueOf(request.getIdCustomer()));
         booking.setEyeCategory(eyeCategory.get());
         booking.setCustomer(customer.get());
-        booking.setStatus(EStatus.PENDING);
 
-//        booking.setDateBooking(LocalDate.parse(request.getDateBooking()));
+        if(request.getStatus().equals("PENDING")){
+            booking.setStatus(EStatus.PENDING);
+        }
+
+        if(request.getStatus().equals("WAITING")) {
+            booking.setStatus(EStatus.WAITING);
+        }
+
+        booking.setMessage(request.getMessage());
+        booking.setCreateAtDay(LocalDateTime.now());
         booking.setTimeBooking(request.getTimeBooking());
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = dateFormat.parse(request.getDateBooking());
@@ -69,6 +87,7 @@ public class BookingService {
        var result = bookingRepository.findById(id).get();
        var eyeCategory = eyeCategoryRepository.findById(Long.valueOf(request.getIdEyeCategory()));
        var customer = customerRepository.findById(Long.valueOf(request.getIdCustomer()));
+       result.setMessage(request.getMessage());
        if(eyeCategory.get().getId().toString().equals(request.getIdEyeCategory())){
            result.setEyeCategory(eyeCategory.get());
        }
