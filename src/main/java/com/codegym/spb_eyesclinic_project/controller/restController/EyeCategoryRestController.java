@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/eyeCategory")
+@RequestMapping("/api/eye-category")
 @AllArgsConstructor
 public class EyeCategoryRestController {
     private final EyeCategoryService eyeCategoryService;

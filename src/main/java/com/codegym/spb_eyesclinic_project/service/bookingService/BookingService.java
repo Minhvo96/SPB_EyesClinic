@@ -4,10 +4,12 @@ import com.codegym.spb_eyesclinic_project.domain.Booking;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.repository.BookingRepository;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 import com.codegym.spb_eyesclinic_project.repository.EyeCategoryRepository;
 
+import com.codegym.spb_eyesclinic_project.utils.AppUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,19 @@ public class BookingService {
 
     public Optional<Booking> getById( Long id) {
         return bookingRepository.findById(id);
+    }
+
+    public BookingShowDetailResponse findBookingShowDetailById(Long id) {
+        var booking = bookingRepository.findById(id).orElse(new Booking());
+        var result = AppUtils.mapper.map(booking, BookingShowDetailResponse.class);
+
+        result.setIdCustomer(booking.getCustomer().getId());
+        result.setIdEyeCategory(booking.getEyeCategory().getNameCategory());
+        result.setDateBooking(booking.getDateBooking());
+        result.setTimeBooking(booking.getTimeBooking());
+        result.setStatus(booking.getStatus().toString());
+
+        return result;
     }
 
     public void create(BookingRequest request) {

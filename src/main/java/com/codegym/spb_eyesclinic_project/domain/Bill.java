@@ -28,4 +28,13 @@ public class Bill {
     @ManyToOne
     private Staff receptionist;
 
+    private BigDecimal totalPrice;
+
+    public Bill(LocalDateTime dateDisease, Prescription prescription, Staff receptionist, BigDecimal totalPrice) {
+
+        this.dateDisease = dateDisease;
+        this.prescription = prescription;
+        this.receptionist = receptionist;
+        this.totalPrice = totalPrice;
+    }
 }

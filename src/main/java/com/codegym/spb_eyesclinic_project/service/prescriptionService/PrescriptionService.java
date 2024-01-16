@@ -1,14 +1,22 @@
 package com.codegym.spb_eyesclinic_project.service.prescriptionService;
 
-import com.codegym.spb_eyesclinic_project.domain.MedicinePrescription;
-import com.codegym.spb_eyesclinic_project.domain.Prescription;
+import com.codegym.spb_eyesclinic_project.domain.*;
+import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
+import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
+import com.codegym.spb_eyesclinic_project.domain.dto.medicineDTO.MedicineResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionResponse;
+import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.request.OptionRequest;
 import com.codegym.spb_eyesclinic_project.repository.*;
+import com.codegym.spb_eyesclinic_project.service.bookingService.BookingService;
 import com.codegym.spb_eyesclinic_project.utils.AppUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +34,30 @@ public class PrescriptionService {
     private final MedicinePrescriptionRepository medicinePrescriptionRepository;
 
     private final MedicineRepository medicineRepository;
+
+    private final BookingService bookingService;
+
+    public Page<PrescriptionResponse> getAll(Pageable pageable, String search) {
+        search = "%" + search + "%";
+        return prescriptionRepository.searchEverything(search, pageable).map(e -> {
+            var result = new PrescriptionResponse();
+
+            result.setId(e.getId());
+            result.setIdBooking(e.getBooking().getId());
+            result.setIdDoctor(e.getDoctor().getId());
+            result.setEyeSight(e.getEyeSight());
+            result.setDiagnose(e.getDiagnose());
+            result.setNote(e.getNote());
+            result.setStatus(e.getBooking().getStatus().toString());
+
+            result.setIdsMedicine(e.getMedicinePrescriptions()
+                    .stream().map(m -> m.getMedicine().getNameMedicine())
+                    .collect(Collectors.toList()));
+            return result;
+        });
+    }
+
+
 
     public void create(PrescriptionRequest request) {
         var result = AppUtils.mapper.map(request, Prescription.class);
@@ -76,6 +108,40 @@ public class PrescriptionService {
 //            medicinePrescriptions.add(medicinePrescription);
 //        }
 //        medicinePrescriptionRepository.saveAll(medicinePrescriptions);
+    }
+
+    public PrescriptionShowDetailResponse findShowDetailById(Long id) {
+        var prescription = prescriptionRepository.findById(id).orElse(new Prescription());
+        var result = AppUtils.mapper.map(prescription, PrescriptionShowDetailResponse.class);
+
+        result.setIdBooking(prescription.getBooking().getId());
+        result.setIdDoctor(prescription.getDoctor().getId());
+        result.setEyeSight(prescription.getEyeSight());
+        result.setDiagnose(prescription.getDiagnose());
+        result.setNote(prescription.getNote());
+
+        // Tính total amount
+        List<MedicinePrescription> medicinePrescriptions = prescription.getMedicinePrescriptions();
+        EyeCategory eyeCategory = prescription.getBooking().getEyeCategory();
+        BigDecimal serviceEyeCate = eyeCategory.getPrice();
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (MedicinePrescription medicinePrescription : medicinePrescriptions) {
+            BigDecimal price = medicinePrescription.getPrice().multiply(BigDecimal.valueOf(medicinePrescription.getQuantity()));
+            totalAmount = totalAmount.add(price);
+        }
+
+        result.setTotalAmount(serviceEyeCate.add(totalAmount));
+
+        result.setIdsMedicine(prescription
+                .getMedicinePrescriptions()
+                .stream().map(medicinePrescription -> medicinePrescription.getMedicine().getNameMedicine() + "," + medicinePrescription.getQuantity() + "," + medicinePrescription.getMedicine().getPriceMedicine() + "," + medicinePrescription.getMedicine().getType())
+                .collect(Collectors.toList()));
+
+        return result;
+    }
+
+    public String findByIdBooking(Long id) {
+        return prescriptionRepository.findPrescriptionByBookingId(id).getId().toString();
     }
 }
 

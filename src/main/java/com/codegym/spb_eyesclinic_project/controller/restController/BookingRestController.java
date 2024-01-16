@@ -2,6 +2,7 @@ package com.codegym.spb_eyesclinic_project.controller.restController;
 
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.eyeCategoryDTO.EyeCategoryRequest;
 import com.codegym.spb_eyesclinic_project.service.bookingService.BookingService;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,11 @@ public class BookingRestController {
     public ResponseEntity<?> getByStatus(){
         EStatus string = EStatus.EXAMINING;
         return new ResponseEntity<>(bookingService.getByStatus(string),HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<BookingShowDetailResponse> findBookingDetail(@PathVariable Long id){
+        return new ResponseEntity<>(bookingService.findBookingShowDetailById(id), HttpStatus.OK);
     }
 
 
