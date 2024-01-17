@@ -33,6 +33,11 @@ public class MedicineRestController {
         return medicineRepository.findAll().stream().map(medicine -> new SelectOptionResponse(medicine.getId().toString(), medicine.getNameMedicine())).collect(Collectors.toList());
     }
 
+    @GetMapping("/all-medicines")
+    public List<MedicineResponse> getAllMedicines(){
+        return medicineRepository.findAll().stream().map(medicine -> new MedicineResponse(medicine.getId(), medicine.getNameMedicine(), medicine.getPriceMedicine(), medicine.getStockQuantity(), medicine.getType().toString())).collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<MedicineResponse> findById(@PathVariable Long id){
         return new ResponseEntity<>(medicineService.findById(id), HttpStatus.OK);

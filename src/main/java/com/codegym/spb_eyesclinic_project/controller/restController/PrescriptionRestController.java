@@ -1,5 +1,6 @@
 package com.codegym.spb_eyesclinic_project.controller.restController;
 
+import com.codegym.spb_eyesclinic_project.domain.dto.eyeCategoryDTO.EyeCategoryRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionShowDetailResponse;
@@ -36,6 +37,11 @@ public class PrescriptionRestController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody PrescriptionRequest request) {
         prescriptionService.create(request);
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSender("Assistant");
+        chatMessage.setContent("Đã đo mắt cho bệnh nhân kế tiếp!");
+        messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

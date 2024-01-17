@@ -81,7 +81,7 @@ public class BookingRestController {
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender("Customer");
-        chatMessage.setContent("Vừa có khách đặt lịch khám!");
+        chatMessage.setContent("Vừa có khách đặt lịch khám vào: " + request.getTimeBooking() + " ngày " + request.getDateBooking());
         messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
