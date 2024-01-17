@@ -40,6 +40,7 @@ public class BillService {
         bill.setPrescription(prescription);
         bill.setReceptionist(receptionist);
         bill.setDateDisease(LocalDateTime.now());
+        bill.getPrescription().getBooking().setStatus(EStatus.COMPLETED);
         billRepository.save(bill);
 
     }

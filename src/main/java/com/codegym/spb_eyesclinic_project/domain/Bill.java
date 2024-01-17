@@ -22,13 +22,14 @@ public class Bill {
 
     private LocalDateTime dateDisease;
 
+    private BigDecimal totalPrice;
+
     @OneToOne
     private Prescription prescription;
 
     @ManyToOne
     private Staff receptionist;
 
-    private BigDecimal totalPrice;
 
     public Bill(LocalDateTime dateDisease, Prescription prescription, Staff receptionist, BigDecimal totalPrice) {
 
