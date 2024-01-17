@@ -3,6 +3,7 @@ package com.codegym.spb_eyesclinic_project.controller.restController;
 import com.codegym.spb_eyesclinic_project.domain.Bill;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.EyeCategory;
+import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillDateRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
@@ -30,5 +31,16 @@ public class BillRestController {
         BillResponse bill = billService.findShowDetailById(id);
         return new ResponseEntity<>(bill,HttpStatus.OK);
     }
+
+    @PostMapping("/revenue")
+    public ResponseEntity<?> getBillsByMonthYear(@RequestBody BillDateRequest billDateRequest) {
+        return new ResponseEntity<>(billService.getBillsByMonthYear(billDateRequest),HttpStatus.OK);
+    }
+
+    @PostMapping("/revenue/year")
+    public ResponseEntity<?> getBillsByYear(@RequestBody BillDateRequest billDateRequest) {
+        return new ResponseEntity<>(billService.getBillsByYear(billDateRequest),HttpStatus.OK);
+    }
+
 
 }
