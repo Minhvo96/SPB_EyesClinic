@@ -1,6 +1,7 @@
 package com.codegym.spb_eyesclinic_project.controller.restController;
 
 import com.codegym.spb_eyesclinic_project.domain.Bill;
+import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.EyeCategory;
 import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillDateRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillRequest;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/bill")
@@ -25,7 +28,7 @@ public class BillRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BillResponse> getById(@PathVariable Long id) {
-        BillResponse bill = billService.findById(id);
+        BillResponse bill = billService.findShowDetailById(id);
         return new ResponseEntity<>(bill,HttpStatus.OK);
     }
 

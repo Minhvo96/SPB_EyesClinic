@@ -15,8 +15,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT book FROM Booking book WHERE book.status = :search")
     Booking findBookingByStatus(@Param("search") EStatus search);
 
+
     @Query("SELECT book FROM Booking book WHERE book.status = :search and book.dateBooking = :date")
     List<Booking> findBookingListByStatus(@Param("search") EStatus search, @Param("date") LocalDate date);
+
 
 
 }

@@ -2,6 +2,7 @@ package com.codegym.spb_eyesclinic_project.controller.restController;
 
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.eyeCategoryDTO.EyeCategoryRequest;
 import com.codegym.spb_eyesclinic_project.domain.socket.ChatMessage;
 import com.codegym.spb_eyesclinic_project.service.bookingService.BookingService;
@@ -40,6 +41,12 @@ public class BookingRestController {
         return new ResponseEntity<>(bookingService.getByStatus(string),HttpStatus.OK);
     }
 
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<BookingShowDetailResponse> findBookingDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(bookingService.findBookingShowDetailById(id), HttpStatus.OK);
+    }
+
     @PostMapping("/waiting")
     public ResponseEntity<?> getByStatusWaiting(@RequestBody BookingRequest request){
         EStatus string = EStatus.WAITING;
@@ -52,6 +59,7 @@ public class BookingRestController {
         EStatus string = EStatus.PENDING;
         String date = request.getDateBooking();
         return new ResponseEntity<>(bookingService.getByStatusPending(string, date),HttpStatus.OK);
+
     }
 
 
@@ -65,7 +73,7 @@ public class BookingRestController {
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender("Customer");
-        chatMessage.setContent("Vừa có khách đặt lịch khám!");
+        chatMessage.setContent("Vừa có khách đặt lịch khám vào: " + request.getTimeBooking() + " ngày " + request.getDateBooking());
         messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
