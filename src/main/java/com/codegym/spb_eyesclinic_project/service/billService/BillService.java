@@ -2,8 +2,10 @@ package com.codegym.spb_eyesclinic_project.service.billService;
 
 import com.codegym.spb_eyesclinic_project.domain.Bill;
 import com.codegym.spb_eyesclinic_project.domain.Staff;
+import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillDateRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillResponse;
+import com.codegym.spb_eyesclinic_project.domain.dto.billDTO.BillTotalResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.medicineDTO.MedicineResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.response.OptionResponse;
 import com.codegym.spb_eyesclinic_project.repository.BillRepository;
@@ -12,9 +14,11 @@ import com.codegym.spb_eyesclinic_project.repository.StaffRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,8 +53,55 @@ public class BillService {
                         item.getMedicine().getNameMedicine(),
                         item.getPrice(),
                         item.getQuantity(),
-                        item.getType().toString()))
+//                        item.getType().toString()
+                        ""))
                 .collect(Collectors.toList()));
         return billResponse;
+    }
+
+    public List<BillTotalResponse> getBillsByMonthYear(BillDateRequest billDateRequest) {
+        List<Bill> bills = billRepository.findAllByMonthYear(Integer.valueOf(billDateRequest.getYear()) , Integer.valueOf(billDateRequest.getMonth()));
+
+        List<BillTotalResponse> billTotalResponses = bills.stream().map(item -> new BillTotalResponse(
+                        String.valueOf(item.getDateDisease().toLocalDate().getDayOfMonth()),
+                        item.getTotalPrice()))
+        .collect(Collectors.toList());
+
+        List<BillTotalResponse> outputList = new ArrayList<>();
+
+        for (BillTotalResponse item : billTotalResponses) {
+            String date = item.getDate();
+            BigDecimal total = item.getTotal();
+
+            boolean found = false;
+            for (BillTotalResponse outputItem : outputList) {
+                if (outputItem.getDate().equals(date)) {
+                    BigDecimal currentTotal = outputItem.getTotal();
+                    outputItem.setTotal(currentTotal.add(total));
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                var billTotalResponse = new BillTotalResponse();
+                billTotalResponse.setDate(date);
+                billTotalResponse.setTotal(total);
+                outputList.add(billTotalResponse);
+            }
+        }
+
+        return outputList;
+    }
+
+    public BigDecimal getBillsByYear(BillDateRequest billDateRequest) {
+        List<Bill> bills = billRepository.findAllByYear(Integer.valueOf(billDateRequest.getYear()));
+        BigDecimal total = new BigDecimal(0L);
+
+        for(Bill bill: bills) {
+            total = total.add(bill.getTotalPrice());
+        }
+
+        return total;
     }
 }
