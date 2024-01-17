@@ -46,6 +46,12 @@ public class BookingService {
         return bookingRepository.findBookingListByStatus(string, dateBooking);
     }
 
+    public List<Booking> getByStatusWaitingOrExamining(EStatus waiting, EStatus examining, String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateBooking = LocalDate.parse(date, formatter);
+        return bookingRepository.findBookingListByWaitingOrExamining(waiting, examining, dateBooking);
+    }
+
     public void changeStatusToCompleted(Long id) {
        Booking booking = bookingRepository.findById(id).get();
        booking.setStatus(EStatus.COMPLETED);
