@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,10 +17,16 @@ import java.util.List;
 @Setter
 public class BillResponse {
 
+    private Long id;
+
     private LocalDateTime dateDisease;
 
     private OptionResponse receptionist;
 
+    private BigDecimal totalPrice;
+
     private List<MedicineResponse> medicinesList;
+
+//    private List<Long> idList;
 
 }

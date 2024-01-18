@@ -2,9 +2,12 @@ package com.codegym.spb_eyesclinic_project.service.bookingService;
 import com.codegym.spb_eyesclinic_project.domain.Booking;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.repository.BookingRepository;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 import com.codegym.spb_eyesclinic_project.repository.EyeCategoryRepository;
+
+import com.codegym.spb_eyesclinic_project.utils.AppUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -43,6 +46,19 @@ public class BookingService {
         return bookingRepository.findBookingListByStatus(string, dateBooking);
     }
 
+    public List<Booking> getByStatusWaitingOrExamining(EStatus waiting, EStatus examining, String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dateBooking = LocalDate.parse(date, formatter);
+        return bookingRepository.findBookingListByWaitingOrExamining(waiting, examining, dateBooking);
+    }
+
+    public void changeStatusToCompleted(Long id) {
+       Booking booking = bookingRepository.findById(id).get();
+       booking.setStatus(EStatus.COMPLETED);
+       bookingRepository.save(booking);
+    }
+
+
     public List<Booking> getByStatusPending(EStatus string, String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dateBooking = LocalDate.parse(date, formatter);
@@ -50,6 +66,20 @@ public class BookingService {
     }
     public Optional<Booking> getById( Long id) {
         return bookingRepository.findById(id);
+    }
+
+
+    public BookingShowDetailResponse findBookingShowDetailById(Long id) {
+        var booking = bookingRepository.findById(id).orElse(new Booking());
+        var result = AppUtils.mapper.map(booking, BookingShowDetailResponse.class);
+
+        result.setIdCustomer(booking.getCustomer().getId());
+        result.setIdEyeCategory(booking.getEyeCategory().getNameCategory());
+        result.setDateBooking(booking.getDateBooking());
+        result.setTimeBooking(booking.getTimeBooking());
+        result.setStatus(booking.getStatus().toString());
+
+        return result;
     }
 
 

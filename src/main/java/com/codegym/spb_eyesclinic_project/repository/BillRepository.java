@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface BillRepository extends JpaRepository<Bill, Long> {
+
     @Query ("select bill from Bill bill WHERE YEAR(bill.dateDisease) = :year AND MONTH(bill.dateDisease) = :month ")
     List<Bill> findAllByMonthYear(@Param("year") Integer year, @Param("month") Integer month);
 
