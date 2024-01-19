@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -143,7 +145,12 @@ public class PrescriptionService {
 
         result.setIdsMedicine(prescription
                 .getMedicinePrescriptions()
-                .stream().map(medicinePrescription -> medicinePrescription.getMedicine().getNameMedicine() + "," + medicinePrescription.getQuantity() + "," + medicinePrescription.getMedicine().getPriceMedicine() + "," + medicinePrescription.getMedicine().getType())
+                .stream().map(medicinePrescription -> medicinePrescription
+                        .getMedicine()
+                        .getNameMedicine() + ","
+                        + medicinePrescription.getQuantity() + ","
+                        + medicinePrescription.getMedicine().getPriceMedicine() + ","
+                        + medicinePrescription.getMedicine().getType() + "," + medicinePrescription.getUsingMedicine())
                 .collect(Collectors.toList()));
 
         return result;
@@ -152,5 +159,8 @@ public class PrescriptionService {
     public String findByIdBooking(Long id) {
         return prescriptionRepository.findPrescriptionByBookingId(id).getId().toString();
     }
+
+
+
 }
 
