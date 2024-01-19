@@ -69,7 +69,7 @@ public class PrescriptionRestController {
     }
     @GetMapping("/booking/{id}")
     public ResponseEntity<?> getPrescriptionByBookingId(@PathVariable Long id) {
-        return new ResponseEntity<>(prescriptionService.getPrescriptionByBookingId(id),HttpStatus.OK);
+        return new ResponseEntity<>(prescriptionService.getEyesInPrescriptionByBookingId(id),HttpStatus.OK);
     }
 
 }

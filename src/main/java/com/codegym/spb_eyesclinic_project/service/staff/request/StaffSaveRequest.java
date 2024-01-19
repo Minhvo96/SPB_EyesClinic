@@ -12,13 +12,12 @@ import javax.persistence.Enumerated;
 @Data
 public class StaffSaveRequest {
 
-    private String phoneNumber;
-
-    private String address;
+    private String avatarId;
 
     private String experience;
 
     private String degree;
 
-    private String role;
+    private String userId;
+
 }

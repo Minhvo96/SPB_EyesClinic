@@ -20,4 +20,12 @@ public class UserSaveRequest {
     private String password;
 
     private String age;
+
+    private String avatar;
+
+    private String experience;
+
+    private String degree;
+
+    private String status;
 }
