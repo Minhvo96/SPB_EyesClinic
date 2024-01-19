@@ -56,6 +56,14 @@ public class BookingRestController {
         return new ResponseEntity<>(bookingService.getByStatusWaiting(string, date),HttpStatus.OK);
     }
 
+    @PostMapping("/waiting-examining")
+    public ResponseEntity<?> getByStatusWaitingOrExamining(@RequestBody BookingRequest request){
+        EStatus waiting = EStatus.WAITING;
+        EStatus examining = EStatus.EXAMINING;
+        String date = request.getDateBooking();
+        return new ResponseEntity<>(bookingService.getByStatusWaitingOrExamining(waiting, examining, date),HttpStatus.OK);
+    }
+
     @PostMapping("/pending")
     public ResponseEntity<?> getByStatusPending(@RequestBody BookingRequest request){
         EStatus string = EStatus.PENDING;
@@ -75,14 +83,18 @@ public class BookingRestController {
 
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender("Customer");
-        chatMessage.setContent("Vừa có khách đặt lịch khám!");
+        chatMessage.setContent("Vừa có khách đặt lịch khám vào: " + request.getTimeBooking() + " ngày " + request.getDateBooking());
         messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+<<<<<<< HEAD
     @GetMapping("/user/{phone}")
     public List<Booking> getBookingsByUserPhone(@PathVariable String phone) {
         return bookingService.getBookingsByUserPhone(phone);
     }
+=======
+
+>>>>>>> 10634501aaeec50d4797bc6983fe3a032b034026
 }
