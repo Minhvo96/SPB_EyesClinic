@@ -10,6 +10,8 @@ import lombok.*;
 public class StaffResponse {
     private Long id;
 
+    private String fullName;
+
     private String phoneNumber;
 
     private String address;
@@ -17,4 +19,8 @@ public class StaffResponse {
     private String experience;
 
     private String role;
+
+    private String degree;
+
+    private String avatar;
 }
