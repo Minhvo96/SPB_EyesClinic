@@ -156,6 +156,8 @@ public class BookingService {
         return result;
     }
 
-
+    public List<Booking> getBookingsByUserPhone(String phone) {
+        return bookingRepository.findBookingsByUserPhone(phone);
+    }
 
 }

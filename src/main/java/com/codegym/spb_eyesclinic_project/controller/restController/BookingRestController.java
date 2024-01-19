@@ -1,5 +1,6 @@
 package com.codegym.spb_eyesclinic_project.controller.restController;
 
+import com.codegym.spb_eyesclinic_project.domain.Booking;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
@@ -14,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/booking")
@@ -77,5 +79,10 @@ public class BookingRestController {
         messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/user/{phone}")
+    public List<Booking> getBookingsByUserPhone(@PathVariable String phone) {
+        return bookingService.getBookingsByUserPhone(phone);
     }
 }
