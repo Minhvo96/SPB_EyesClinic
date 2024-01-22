@@ -1,8 +1,13 @@
 package com.codegym.spb_eyesclinic_project.service.user;
 
 
+import com.codegym.spb_eyesclinic_project.domain.Avatar;
 import com.codegym.spb_eyesclinic_project.domain.Customer;
+import com.codegym.spb_eyesclinic_project.domain.Enum.EDegree;
+import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
+import com.codegym.spb_eyesclinic_project.domain.Staff;
 import com.codegym.spb_eyesclinic_project.domain.User;
+import com.codegym.spb_eyesclinic_project.repository.AvatarRepository;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 import com.codegym.spb_eyesclinic_project.repository.StaffRepository;
 import com.codegym.spb_eyesclinic_project.repository.UserRepository;
@@ -10,6 +15,7 @@ import com.codegym.spb_eyesclinic_project.service.user.request.UserSaveRequest;
 import com.codegym.spb_eyesclinic_project.service.user.response.UserListResponse;
 import com.codegym.spb_eyesclinic_project.utils.AppUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +29,8 @@ public class UserServices {
     private final UserRepository userRepository;
     private final StaffRepository staffRepository;
     private final CustomerRepository customerRepository;
+    private final AvatarRepository avatarRepository;
+    private final PasswordEncoder passwordEncoder;
 
 //    public User findByPhoneNumber(String phoneNumber){
 //        return userRepository.findUserByPhoneNumber(phoneNumber).orElseThrow(()-> new RuntimeException("Not found!"));
@@ -38,21 +46,40 @@ public class UserServices {
     public String createUser(UserSaveRequest request) {
 
         var user = AppUtils.mapper.map(request, User.class);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        var users = userRepository.findAll();
-        var listPhoneNumbers = users.stream().map(User::getPhoneNumber).toList();
-        for(int i = 0; i < listPhoneNumbers.size(); i++) {
-            if(listPhoneNumbers.get(i).equals(request.getPhoneNumber())) {
-                var custormer = customerRepository.findCustomerByPhone(request.getPhoneNumber());
-                return custormer.getId().toString();
+        if (request.getRole().equals("ROLE_CUSTOMER")) {
+            var users = userRepository.findAll();
+            var listPhoneNumbers = users.stream().map(User::getPhoneNumber).toList();
+            for (int i = 0; i < listPhoneNumbers.size(); i++) {
+                if (listPhoneNumbers.get(i).equals(request.getPhoneNumber())) {
+                    var customer = customerRepository.findCustomerByPhone(request.getPhoneNumber());
+                    if(customer != null) {
+                        return customer.getId().toString();
+                    } else {
+                        return "error";
+                    }
+                }
             }
+            var userFinal = userRepository.save(user);
+            var customer = new Customer(request.getAge(), userFinal);
+            var newCustomer = customerRepository.save(customer);
+            return newCustomer.getId().toString();
         }
+
         var userFinal = userRepository.save(user);
 
-        var customer = new Customer(request.getAge(), userFinal);
-        var newCustomer = customerRepository.save(customer);
+        var avatar = new Avatar(request.getAvatar());
+        var avatarFinal = avatarRepository.save(avatar);
 
-        return newCustomer.getId().toString();
+        var staff = new Staff(request.getExperience(), EDegree.valueOf(request.getDegree()), avatarFinal, userFinal);
+        staff.setStatus(EStatus.WORKING);
+        var newStaff = staffRepository.save(staff);
+
+        return newStaff.getId().toString();
+    }
+
+
 
 
 
@@ -99,5 +126,5 @@ public class UserServices {
 //
 //        return role;
 //    }
-    }
+
 }

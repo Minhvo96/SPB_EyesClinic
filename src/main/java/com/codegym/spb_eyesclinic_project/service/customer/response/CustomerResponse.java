@@ -14,7 +14,9 @@ public class CustomerResponse {
 
     private String phoneNumber;
 
+    private String fullName;
+
     private String address;
 
-    private String role;
+
 }

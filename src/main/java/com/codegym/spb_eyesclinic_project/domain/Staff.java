@@ -1,7 +1,7 @@
 package com.codegym.spb_eyesclinic_project.domain;
-
 import com.codegym.spb_eyesclinic_project.domain.Enum.EDegree;
 import com.codegym.spb_eyesclinic_project.domain.Enum.ERole;
+import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +25,6 @@ public class Staff {
     @Enumerated(EnumType.STRING)
     private EDegree degree;
 
-    @Enumerated(EnumType.STRING)
-    private ERole role;
-
     @OneToOne
     private Avatar avatar;
 
@@ -35,7 +32,17 @@ public class Staff {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    private EStatus status;
+
     public Staff(Long id) {
         this.id = id;
+    }
+
+    public Staff(String experience, EDegree degree, Avatar avatar, User user) {
+        this.experience = experience;
+        this.degree = degree;
+        this.avatar = avatar;
+        this.user = user;
     }
 }

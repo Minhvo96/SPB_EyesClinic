@@ -15,4 +15,6 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 
     @Query ("select bill from Bill bill WHERE YEAR(bill.dateDisease) = :year")
     List<Bill> findAllByYear(@Param("year") Integer year);
+
+
 }

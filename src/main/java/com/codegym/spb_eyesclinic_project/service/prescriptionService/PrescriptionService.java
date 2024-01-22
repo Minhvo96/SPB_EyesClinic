@@ -4,6 +4,7 @@ import com.codegym.spb_eyesclinic_project.domain.*;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.medicineDTO.MedicineResponse;
+import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionEyeResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionShowDetailResponse;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -115,8 +118,13 @@ public class PrescriptionService {
         }
     }
 
-    public Prescription getPrescriptionByBookingId (Long id) {
-        return prescriptionRepository.getPrescriptionByIdBooking(id);
+    public PrescriptionEyeResponse getEyesInPrescriptionByBookingId (Long id) {
+        var prescription = prescriptionRepository.getPrescriptionByIdBooking(id);
+        var result = AppUtils.mapper.map(prescription, PrescriptionEyeResponse.class);
+
+        result.setEyeSight(prescription.getEyeSight());
+
+        return result;
     }
 
     public PrescriptionShowDetailResponse findShowDetailById(Long id) {
@@ -143,7 +151,12 @@ public class PrescriptionService {
 
         result.setIdsMedicine(prescription
                 .getMedicinePrescriptions()
-                .stream().map(medicinePrescription -> medicinePrescription.getMedicine().getNameMedicine() + "," + medicinePrescription.getQuantity() + "," + medicinePrescription.getMedicine().getPriceMedicine() + "," + medicinePrescription.getMedicine().getType())
+                .stream().map(medicinePrescription -> medicinePrescription
+                        .getMedicine()
+                        .getNameMedicine() + ","
+                        + medicinePrescription.getQuantity() + ","
+                        + medicinePrescription.getMedicine().getPriceMedicine() + ","
+                        + medicinePrescription.getMedicine().getType() + "," + medicinePrescription.getUsingMedicine())
                 .collect(Collectors.toList()));
 
         return result;
@@ -152,5 +165,8 @@ public class PrescriptionService {
     public String findByIdBooking(Long id) {
         return prescriptionRepository.findPrescriptionByBookingId(id).getId().toString();
     }
+
+
+
 }
 

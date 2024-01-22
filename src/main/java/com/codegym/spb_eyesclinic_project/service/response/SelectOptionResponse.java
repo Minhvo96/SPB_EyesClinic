@@ -12,4 +12,5 @@ public class SelectOptionResponse {
     private String value;
 
     private String name;
+
 }

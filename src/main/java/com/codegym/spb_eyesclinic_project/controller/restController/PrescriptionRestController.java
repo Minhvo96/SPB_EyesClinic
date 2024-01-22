@@ -1,6 +1,5 @@
 package com.codegym.spb_eyesclinic_project.controller.restController;
 
-import com.codegym.spb_eyesclinic_project.domain.dto.eyeCategoryDTO.EyeCategoryRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionShowDetailResponse;
@@ -69,7 +68,7 @@ public class PrescriptionRestController {
     }
     @GetMapping("/booking/{id}")
     public ResponseEntity<?> getPrescriptionByBookingId(@PathVariable Long id) {
-        return new ResponseEntity<>(prescriptionService.getPrescriptionByBookingId(id),HttpStatus.OK);
+        return new ResponseEntity<>(prescriptionService.getEyesInPrescriptionByBookingId(id),HttpStatus.OK);
     }
 
 }
