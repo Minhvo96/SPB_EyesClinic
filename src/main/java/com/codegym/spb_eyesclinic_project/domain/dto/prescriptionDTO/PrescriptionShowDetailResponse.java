@@ -1,7 +1,9 @@
 package com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO;
 
 
+import com.codegym.spb_eyesclinic_project.domain.dto.medicineDTO.MedicineResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.request.OptionRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.response.OptionResponse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +18,7 @@ public class PrescriptionShowDetailResponse {
 
     private Long idBooking;
 
-    private Long idDoctor;
+    private OptionResponse doctor;
 
     private String eyeSight;
 
@@ -26,7 +28,5 @@ public class PrescriptionShowDetailResponse {
 
     private BigDecimal totalAmount;
 
-
-
-    private List<String> idsMedicine;
+    private List<MedicineResponse> medicines;
 }
