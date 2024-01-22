@@ -99,7 +99,7 @@ public class BillService {
     }
 
     public List<BillTotalResponse> getBillsByMonthYear(BillDateRequest billDateRequest) {
-        List<Bill> bills = billRepository.findAllByMonthYear(Integer.valueOf(billDateRequest.getYear()) , Integer.valueOf(billDateRequest.getMonth()));
+        List<Bill> bills = billRepository.findAllByMonthYear(Integer.valueOf(billDateRequest.getYear()), Integer.valueOf(billDateRequest.getMonth()));
 
         List<BillTotalResponse> billTotalResponses = bills.stream().map(item -> new BillTotalResponse(
                         String.valueOf(item.getDateDisease().toLocalDate().getDayOfMonth()),
