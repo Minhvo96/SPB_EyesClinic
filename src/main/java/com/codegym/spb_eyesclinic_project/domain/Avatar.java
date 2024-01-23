@@ -36,8 +36,12 @@ public class Avatar {
     @Column(name = "cloud_id")
     private String cloudId;
 
-    @OneToOne
-    @JsonIgnore
-    private Staff staff;
+//    @OneToOne
+//    @JsonIgnore
+//    private Staff staff;
 
+
+    public Avatar(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
 }

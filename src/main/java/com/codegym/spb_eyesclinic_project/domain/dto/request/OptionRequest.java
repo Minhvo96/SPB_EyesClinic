@@ -15,4 +15,6 @@ public class OptionRequest {
     private String quantity;
 
     private String usingMedicine;
+
+    private String noteMedicine;
 }

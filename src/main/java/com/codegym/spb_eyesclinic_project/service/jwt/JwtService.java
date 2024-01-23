@@ -1,9 +1,13 @@
 package com.codegym.spb_eyesclinic_project.service.jwt;
 
 
+import com.codegym.spb_eyesclinic_project.domain.Staff;
 import com.codegym.spb_eyesclinic_project.domain.User;
 import com.codegym.spb_eyesclinic_project.domain.UserPrinciple;
+import com.codegym.spb_eyesclinic_project.domain.dto.userDTO.UserResponse;
+import com.codegym.spb_eyesclinic_project.repository.StaffRepository;
 import com.codegym.spb_eyesclinic_project.repository.UserRepository;
+import com.codegym.spb_eyesclinic_project.utils.AppUtils;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +29,20 @@ public class JwtService {
     @Autowired
     private UserRepository userRepository ;
 
+    @Autowired
+    private StaffRepository staffRepository;
+
     public String generateTokenLogin(Authentication authentication) {
         UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
 
         User user = userRepository.findById(userPrincipal.getId()).get();
+        Staff staff = staffRepository.findStaffByUser(user.getId());
+        UserResponse userResponse = AppUtils.mapper.map(user, UserResponse.class);
+        userResponse.setRoles(user.getRole().toString());
+        userResponse.setImage(staff.getAvatar().getFileUrl());
 
         return Jwts.builder()
-                .setSubject(user.toString())
+                .setSubject(userResponse.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)

@@ -27,7 +27,6 @@ public class UserRestController {
     @PostMapping
     public String createUser(@RequestBody UserSaveRequest request) {
         return userService.createUser(request);
-
     }
 
     @PutMapping("/{id}")
