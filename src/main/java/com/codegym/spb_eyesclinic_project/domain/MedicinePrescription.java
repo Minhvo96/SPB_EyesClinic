@@ -31,16 +31,18 @@ public class MedicinePrescription {
 
     private String usingMedicine;
 
+    private String noteMedicine;
+
     @Enumerated(EnumType.STRING)
     private EType type;
 
-    public MedicinePrescription(Prescription prescription, Medicine medicine, Long quantity, BigDecimal price, String usingMedicine) {
+    public MedicinePrescription(Prescription prescription, Medicine medicine, Long quantity, BigDecimal price, String usingMedicine, String noteMedicine) {
         this.prescription = prescription;
         this.medicine = medicine;
         this.quantity = quantity;
         this.price = price;
         this.usingMedicine = usingMedicine;
-
+        this.noteMedicine = noteMedicine;
     }
 
 }

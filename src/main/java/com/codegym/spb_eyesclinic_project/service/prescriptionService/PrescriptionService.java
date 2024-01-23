@@ -111,8 +111,8 @@ public class PrescriptionService {
                         medicines.get(i),
                         Long.valueOf(request.getIdsMedicine().get(i).getQuantity()),
                         medicines.get(i).getPriceMedicine(),
-                        request.getIdsMedicine().get(i).getUsingMedicine());
-
+                        request.getIdsMedicine().get(i).getUsingMedicine(),
+                        request.getIdsMedicine().get(i).getNoteMedicine());
                 medicinePrescriptions.add(medicinePrescription);
             }
             medicinePrescriptionRepository.saveAll(medicinePrescriptions);
@@ -121,10 +121,11 @@ public class PrescriptionService {
 
     public PrescriptionEyeResponse getEyesInPrescriptionByBookingId (Long id) {
         var prescription = prescriptionRepository.getPrescriptionByIdBooking(id);
+        if(prescription == null) {
+            return new PrescriptionEyeResponse();
+        }
         var result = AppUtils.mapper.map(prescription, PrescriptionEyeResponse.class);
-
         result.setEyeSight(prescription.getEyeSight());
-
         return result;
     }
 
@@ -156,7 +157,9 @@ public class PrescriptionService {
                         medicinePrescription.getMedicine().getNameMedicine(),
                         medicinePrescription.getPrice(),
                         medicinePrescription.getQuantity(),
-                        medicinePrescription.getMedicine().getType().toString()
+                        medicinePrescription.getMedicine().getType().toString(),
+                        medicinePrescription.getNoteMedicine(),
+                        medicinePrescription.getUsingMedicine()
                 ))
                 .collect(Collectors.toList()));
 

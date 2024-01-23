@@ -67,6 +67,7 @@ public class UserServices {
             return newCustomer.getId().toString();
         }
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
         var userFinal = userRepository.save(user);
 
         var avatar = new Avatar(request.getAvatar());
