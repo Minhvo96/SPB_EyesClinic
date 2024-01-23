@@ -18,7 +18,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/bill")
 @AllArgsConstructor
+
+
 public class BillRestController {
+
     private final BillService billService;
     @PostMapping
     public ResponseEntity<?> create(@RequestBody BillRequest request){

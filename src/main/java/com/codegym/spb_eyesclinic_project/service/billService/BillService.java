@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+
 public class BillService {
     private final BillRepository billRepository;
 
@@ -31,9 +32,6 @@ public class BillService {
 
     private final StaffRepository staffRepository;
 
-    private final EyeCategoryRepository eyeCategoryRepository;
-
-    private final MedicineRepository medicineRepository;
 
 
    public void create(BillRequest request) {
