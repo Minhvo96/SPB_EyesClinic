@@ -1,6 +1,7 @@
 package com.codegym.spb_eyesclinic_project.controller.restController;
 
 import com.codegym.spb_eyesclinic_project.domain.Booking;
+import com.codegym.spb_eyesclinic_project.domain.User;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingStatsResponse;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 import com.codegym.spb_eyesclinic_project.repository.MedicineRepository;
@@ -22,11 +23,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CustomerRestController {
 
-    private final CustomerRepository customerRepository;
     private CustomerService customerService;
 
     @GetMapping
-    public List<CustomerResponse> getAllBills() {
+    public List<CustomerResponse> getAllCustomers() {
         return customerService.getAll();
     }
 
@@ -56,5 +56,9 @@ public class CustomerRestController {
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+    @GetMapping("/search/{keyword}")
+    public List<CustomerResponse> searchCustomer(@PathVariable String keyword) {
+        return customerService.searchPatient(keyword);
     }
 }
