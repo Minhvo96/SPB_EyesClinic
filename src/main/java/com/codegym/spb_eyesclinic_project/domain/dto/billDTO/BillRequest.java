@@ -21,6 +21,7 @@ public class BillRequest {
 
     private String totalPrice;
 
+
 //    private List<String> idList;
 
 }

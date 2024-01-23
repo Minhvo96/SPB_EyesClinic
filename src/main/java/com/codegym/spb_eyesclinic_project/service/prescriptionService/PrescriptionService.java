@@ -157,7 +157,9 @@ public class PrescriptionService {
                         medicinePrescription.getMedicine().getNameMedicine(),
                         medicinePrescription.getPrice(),
                         medicinePrescription.getQuantity(),
-                        medicinePrescription.getMedicine().getType().toString()
+                        medicinePrescription.getMedicine().getType().toString(),
+                        medicinePrescription.getNoteMedicine(),
+                        medicinePrescription.getUsingMedicine()
                 ))
                 .collect(Collectors.toList()));
 
