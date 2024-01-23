@@ -50,7 +50,7 @@ public class AuthService implements UserDetailsService {
         if (userOptional.isEmpty()
                 || passwordEncoder.matches(userOptional.get().getPassword(),request.getPassword())) {
             result.rejectValue("password", "password",
-                    "Tài khoản hoặc mật khẩu không đúng");
+                    "Số điện thoại hoặc mật khẩu không đúng");
             check = true;
         }
         return check;

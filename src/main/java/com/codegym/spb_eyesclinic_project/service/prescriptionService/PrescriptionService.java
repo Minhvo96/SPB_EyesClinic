@@ -9,6 +9,7 @@ import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.Prescriptio
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.prescriptionDTO.PrescriptionShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.request.OptionRequest;
+import com.codegym.spb_eyesclinic_project.domain.dto.response.OptionResponse;
 import com.codegym.spb_eyesclinic_project.repository.*;
 import com.codegym.spb_eyesclinic_project.service.bookingService.BookingService;
 import com.codegym.spb_eyesclinic_project.utils.AppUtils;
@@ -110,8 +111,8 @@ public class PrescriptionService {
                         medicines.get(i),
                         Long.valueOf(request.getIdsMedicine().get(i).getQuantity()),
                         medicines.get(i).getPriceMedicine(),
-                        request.getIdsMedicine().get(i).getUsingMedicine());
-
+                        request.getIdsMedicine().get(i).getUsingMedicine(),
+                        request.getIdsMedicine().get(i).getNoteMedicine());
                 medicinePrescriptions.add(medicinePrescription);
             }
             medicinePrescriptionRepository.saveAll(medicinePrescriptions);
@@ -120,19 +121,19 @@ public class PrescriptionService {
 
     public PrescriptionEyeResponse getEyesInPrescriptionByBookingId (Long id) {
         var prescription = prescriptionRepository.getPrescriptionByIdBooking(id);
+        if(prescription == null) {
+            return new PrescriptionEyeResponse();
+        }
         var result = AppUtils.mapper.map(prescription, PrescriptionEyeResponse.class);
-
         result.setEyeSight(prescription.getEyeSight());
-
         return result;
     }
 
     public PrescriptionShowDetailResponse findShowDetailById(Long id) {
         var prescription = prescriptionRepository.findById(id).orElse(new Prescription());
         var result = AppUtils.mapper.map(prescription, PrescriptionShowDetailResponse.class);
-
         result.setIdBooking(prescription.getBooking().getId());
-        result.setIdDoctor(prescription.getDoctor().getId());
+        result.setDoctor(new OptionResponse(prescription.getDoctor().getId().toString(), prescription.getDoctor().getUser().getFullName()));
         result.setEyeSight(prescription.getEyeSight());
         result.setDiagnose(prescription.getDiagnose());
         result.setNote(prescription.getNote());
@@ -149,14 +150,15 @@ public class PrescriptionService {
 
         result.setTotalAmount(serviceEyeCate.add(totalAmount));
 
-        result.setIdsMedicine(prescription
+        result.setMedicines(prescription
                 .getMedicinePrescriptions()
-                .stream().map(medicinePrescription -> medicinePrescription
-                        .getMedicine()
-                        .getNameMedicine() + ","
-                        + medicinePrescription.getQuantity() + ","
-                        + medicinePrescription.getMedicine().getPriceMedicine() + ","
-                        + medicinePrescription.getMedicine().getType() + "," + medicinePrescription.getUsingMedicine())
+                .stream().map(medicinePrescription -> new MedicineResponse(
+                        medicinePrescription.getId(),
+                        medicinePrescription.getMedicine().getNameMedicine(),
+                        medicinePrescription.getPrice(),
+                        medicinePrescription.getQuantity(),
+                        medicinePrescription.getMedicine().getType().toString()
+                ))
                 .collect(Collectors.toList()));
 
         return result;

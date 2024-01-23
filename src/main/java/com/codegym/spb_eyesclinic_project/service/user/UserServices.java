@@ -66,6 +66,7 @@ public class UserServices {
             var newCustomer = customerRepository.save(customer);
             return newCustomer.getId().toString();
         }
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
