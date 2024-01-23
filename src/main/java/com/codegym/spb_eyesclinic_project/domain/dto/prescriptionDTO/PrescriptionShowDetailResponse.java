@@ -26,7 +26,5 @@ public class PrescriptionShowDetailResponse {
 
     private BigDecimal totalAmount;
 
-
-
     private List<String> idsMedicine;
 }

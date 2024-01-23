@@ -89,12 +89,9 @@ public class BookingRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-<<<<<<< HEAD
     @GetMapping("/user/{phone}")
     public List<Booking> getBookingsByUserPhone(@PathVariable String phone) {
         return bookingService.getBookingsByUserPhone(phone);
     }
-=======
 
->>>>>>> 10634501aaeec50d4797bc6983fe3a032b034026
 }
