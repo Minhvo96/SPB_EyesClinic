@@ -22,4 +22,15 @@ public class MedicineResponse {
 
     private String type;
 
+    private String noteMedicine;
+
+    private String useMedicine;
+
+    public MedicineResponse(Long id, String nameMedicine, BigDecimal priceMedicine, Long quantity, String type) {
+        this.id = id;
+        this.nameMedicine = nameMedicine;
+        this.priceMedicine = priceMedicine;
+        this.quantity = quantity;
+        this.type = type;
+    }
 }

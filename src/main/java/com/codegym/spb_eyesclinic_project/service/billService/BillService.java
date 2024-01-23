@@ -93,7 +93,9 @@ public class BillService {
                         item.getPrice(),
                         item.getQuantity(),
 //                        item.getType().toString()
-                        ""))
+                        "",
+                        item.getNoteMedicine(),
+                        item.getUsingMedicine()))
                 .collect(Collectors.toList()));
         return billResponse;
     }
