@@ -46,7 +46,7 @@ public class UserServices {
     public String createUser(UserSaveRequest request) {
 
         var user = AppUtils.mapper.map(request, User.class);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
 
         if (request.getRole().equals("ROLE_CUSTOMER")) {
             var users = userRepository.findAll();
@@ -66,6 +66,8 @@ public class UserServices {
             var newCustomer = customerRepository.save(customer);
             return newCustomer.getId().toString();
         }
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         var userFinal = userRepository.save(user);
 
