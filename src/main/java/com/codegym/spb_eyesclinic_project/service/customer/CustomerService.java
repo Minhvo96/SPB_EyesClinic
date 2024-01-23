@@ -9,6 +9,7 @@ import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetai
 import com.codegym.spb_eyesclinic_project.repository.BookingRepository;
 import com.codegym.spb_eyesclinic_project.repository.CustomerRepository;
 
+import com.codegym.spb_eyesclinic_project.repository.UserRepository;
 import com.codegym.spb_eyesclinic_project.service.customer.request.CustomerSaveRequest;
 import com.codegym.spb_eyesclinic_project.service.customer.response.CustomerResponse;
 import com.codegym.spb_eyesclinic_project.service.response.SelectOptionResponse;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -90,5 +92,17 @@ public class CustomerService {
         int cancelledCount = bookingRepository.findBookingsCountByCustomerAndStatus(customer, cancelledStatus);
 
         return ResponseEntity.ok(cancelledCount);
+    }
+
+    public List<CustomerResponse> searchPatient(String keyword){
+        keyword = "%" + keyword + "%";
+        List<CustomerResponse> customerResponses = customerRepository.findCustomerByPhoneOrFullName(keyword).stream().map(
+                customer -> new CustomerResponse(customer.getId(),
+                        customer.getAge(),
+                        customer.getUser().getPhoneNumber(),
+                        customer.getUser().getFullName(),
+                        customer.getUser().getAddress())
+        ).collect(Collectors.toList());
+        return customerResponses;
     }
 }
