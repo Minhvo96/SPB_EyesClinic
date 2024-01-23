@@ -6,6 +6,7 @@ import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingRequest;
 import com.codegym.spb_eyesclinic_project.domain.dto.bookingDTO.BookingShowDetailResponse;
 import com.codegym.spb_eyesclinic_project.domain.dto.eyeCategoryDTO.EyeCategoryRequest;
 import com.codegym.spb_eyesclinic_project.domain.socket.ChatMessage;
+import com.codegym.spb_eyesclinic_project.domain.socket.ListContent;
 import com.codegym.spb_eyesclinic_project.service.bookingService.BookingService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +63,20 @@ public class BookingRestController {
         EStatus waiting = EStatus.WAITING;
         EStatus examining = EStatus.EXAMINING;
         String date = request.getDateBooking();
-        return new ResponseEntity<>(bookingService.getByStatusWaitingOrExamining(waiting, examining, date),HttpStatus.OK);
+
+        List<Booking> bookings = bookingService.getByStatusWaitingOrExamining(waiting, examining, date);
+
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String newDateStr = dateFormat.format(currentDate);
+
+        if(date.equals(newDateStr)) {
+            ListContent listContent = new ListContent();
+            listContent.setContents(bookings);
+            messagingTemplate.convertAndSend("/topic/publicContent", listContent);
+        }
+
+        return new ResponseEntity<>(bookings,HttpStatus.OK);
     }
 
     @PostMapping("/pending")
