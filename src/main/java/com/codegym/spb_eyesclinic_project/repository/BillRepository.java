@@ -2,6 +2,7 @@ package com.codegym.spb_eyesclinic_project.repository;
 
 import com.codegym.spb_eyesclinic_project.domain.Bill;
 import com.codegym.spb_eyesclinic_project.domain.Enum.EStatus;
+import com.codegym.spb_eyesclinic_project.domain.Prescription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +17,6 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     @Query ("select bill from Bill bill WHERE YEAR(bill.dateDisease) = :year")
     List<Bill> findAllByYear(@Param("year") Integer year);
 
+    Bill findBillByPrescription(Prescription prescription);
 
 }

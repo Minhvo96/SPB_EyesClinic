@@ -20,6 +20,8 @@ public class PrescriptionShowDetailResponse {
 
     private OptionResponse doctor;
 
+    private String cashier;
+
     private String eyeSight;
 
     private String diagnose;
