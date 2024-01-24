@@ -68,6 +68,8 @@ public class UserServices {
         }
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
         var userFinal = userRepository.save(user);
 
         var avatar = new Avatar(request.getAvatar());
