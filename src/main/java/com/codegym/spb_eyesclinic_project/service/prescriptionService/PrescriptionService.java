@@ -42,6 +42,8 @@ public class PrescriptionService {
 
     private final BookingService bookingService;
 
+    private final BillRepository billRepository;
+
     public Page<PrescriptionResponse> getAll(Pageable pageable, String search) {
         search = "%" + search + "%";
         return prescriptionRepository.searchEverything(search, pageable).map(e -> {
@@ -137,6 +139,8 @@ public class PrescriptionService {
         result.setEyeSight(prescription.getEyeSight());
         result.setDiagnose(prescription.getDiagnose());
         result.setNote(prescription.getNote());
+        Bill bill = billRepository.findBillByPrescription(prescription);
+        result.setCashier(bill.getReceptionist().getUser().getFullName());
 
         // Tính total amount
         List<MedicinePrescription> medicinePrescriptions = prescription.getMedicinePrescriptions();
