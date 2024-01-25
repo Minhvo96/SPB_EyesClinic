@@ -37,10 +37,10 @@ public class PrescriptionRestController {
     public ResponseEntity<?> create(@RequestBody PrescriptionRequest request) {
         prescriptionService.create(request);
 
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSender("Assistant");
-        chatMessage.setContent("Đã đo mắt cho bệnh nhân kế tiếp!");
-        messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
+//        ChatMessage chatMessage = new ChatMessage();
+//        chatMessage.setSender("Assistant");
+//        chatMessage.setContent("Đã đo mắt cho bệnh nhân kế tiếp!");
+//        messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
