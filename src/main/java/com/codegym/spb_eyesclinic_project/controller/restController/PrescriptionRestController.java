@@ -48,12 +48,6 @@ public class PrescriptionRestController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody PrescriptionRequest request, @PathVariable Long id) {
         prescriptionService.updatePrescription(request, id);
-
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSender("DOCTOR");
-        chatMessage.setContent("Đã khám cho bệnh nhân xong, chờ thanh toán!");
-        messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
-
         return ResponseEntity.ok().build();
     }
 
