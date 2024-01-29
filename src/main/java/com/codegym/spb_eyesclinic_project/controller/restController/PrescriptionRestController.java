@@ -37,22 +37,12 @@ public class PrescriptionRestController {
     public ResponseEntity<?> create(@RequestBody PrescriptionRequest request) {
         prescriptionService.create(request);
 
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSender("Assistant");
-        chatMessage.setContent("Đã đo mắt cho bệnh nhân kế tiếp!");
-        messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody PrescriptionRequest request, @PathVariable Long id) {
         prescriptionService.updatePrescription(request, id);
-
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSender("DOCTOR");
-        chatMessage.setContent("Đã khám cho bệnh nhân xong, chờ thanh toán!");
-        messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
 
         return ResponseEntity.ok().build();
     }
