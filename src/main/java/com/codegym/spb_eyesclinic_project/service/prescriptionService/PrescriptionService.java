@@ -44,6 +44,8 @@ public class PrescriptionService {
 
     private final BillRepository billRepository;
 
+    private final UserRepository userRepository;
+
     public Page<PrescriptionResponse> getAll(Pageable pageable, String search) {
         search = "%" + search + "%";
         return prescriptionRepository.searchEverything(search, pageable).map(e -> {
@@ -92,8 +94,9 @@ public class PrescriptionService {
 
             AppUtils.mapper.map(request, existingPrescription);
 
-            var doctor = staffRepository.findById(Long.valueOf(request.getIdDoctor()));
-            existingPrescription.setDoctor(doctor.get());
+            var user = userRepository.findById(Long.valueOf(request.getIdDoctor()));
+            var doctor = staffRepository.findStaffByUser(user.get().getId());
+            existingPrescription.setDoctor(doctor);
 
             var booking = bookingRepository.findById(id);
             existingPrescription.setBooking(booking.get());
@@ -140,8 +143,9 @@ public class PrescriptionService {
         result.setDiagnose(prescription.getDiagnose());
         result.setNote(prescription.getNote());
         Bill bill = billRepository.findBillByPrescription(prescription);
-        result.setCashier(bill.getReceptionist().getUser().getFullName());
-
+        if(bill != null){
+            result.setCashier(bill.getReceptionist().getUser().getFullName());
+        }
         // Tính total amount
         List<MedicinePrescription> medicinePrescriptions = prescription.getMedicinePrescriptions();
         EyeCategory eyeCategory = prescription.getBooking().getEyeCategory();
