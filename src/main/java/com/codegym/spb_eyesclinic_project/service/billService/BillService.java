@@ -32,12 +32,14 @@ public class BillService {
 
     private final StaffRepository staffRepository;
 
+    private final UserRepository userRepository;
 
 
    public void create(BillRequest request) {
         Bill bill = AppUtils.mapper.map(request, Bill.class);
         Prescription prescription = prescriptionRepository.findById(Long.valueOf(request.getIdPrescription())).orElse(new Prescription());
-        Staff receptionist = staffRepository.findById(Long.valueOf(request.getIdReceptionist())).orElse(new Staff());
+        var user = userRepository.findById(Long.valueOf(request.getIdReceptionist()));
+        Staff receptionist = staffRepository.findStaffByUser(user.get().getId());
         bill.setPrescription(prescription);
         bill.setReceptionist(receptionist);
         bill.setDateDisease(LocalDateTime.now());
