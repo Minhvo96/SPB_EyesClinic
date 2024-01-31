@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>SPB_EyesClinic_Project</name>
     <description>SPB_EyesClinic_Project</description>
+    <packaging>war</packaging>
     <properties>
         <java.version>17</java.version>
     </properties>

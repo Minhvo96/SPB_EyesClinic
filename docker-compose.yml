@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0.28-oracle
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Raisingthebar123!!/
+    ports:
+      - "3377:3306"
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    restart: always
+    ports:
+      - "8086:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/c0623g1_4men?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Raisingthebar123!!/
+      - SPRING_THYMELEAF_CACHE=true
+    # Đặt biến môi trường dựa trên môi trường Docker
